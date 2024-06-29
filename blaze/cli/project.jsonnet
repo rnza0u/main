@@ -64,9 +64,17 @@ local deploymentsByTarget = {
   } for name in finalTargets
 };
 
+local cargoTargets = cargo.all({
+  workspaceDependencies: workspaceDependencies,
+  environment: LocalEnv(targets.dev),
+  extraTargetDirs: std.map(
+    function(name) 'target-' + targets[name].rustTriple, 
+    finalTargets
+  )
+});
+
 {
-  targets: buildsByTarget + deploymentsByTarget + {
-    source: cargo.source(workspaceDependencies),
+  targets: cargoTargets + buildsByTarget + deploymentsByTarget + {
     run: {
       executor: 'std:commands',
       options: {
@@ -105,12 +113,6 @@ local deploymentsByTarget = {
         'source'
       ]
     },
-    check: cargo.check(),
-    lint: cargo.lint(),
-    clean: cargo.clean(std.map(
-      function(name) 'target-' + targets[name].rustTriple, 
-      finalTargets
-    )),
     'publish-crate': {
       executor: executors.cargoPublish(),
       options: {

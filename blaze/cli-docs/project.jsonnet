@@ -3,7 +3,8 @@ local LocalEnv = import '../core/local-env.jsonnet';
 local cargo = (import 'cargo.libsonnet')('nightly', ['-Z', 'bindeps']);
 
 local cargoTargets = cargo.all({
-    workspaceDependencies: ['blaze-cli']
+    workspaceDependencies: ['blaze-cli'],
+    environment: LocalEnv(targets.dev)
 });
 
 {

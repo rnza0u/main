@@ -1,6 +1,7 @@
 local targets = import '../targets.jsonnet';
 local cargo = (import 'cargo.libsonnet')('nightly', ['-Z', 'bindeps']);
 local executors = import 'executors.libsonnet';
+local LocalEnv = import './local-env.jsonnet';
 local blaze = std.extVar('blaze');
 
 local cargoDependencies = [
@@ -17,11 +18,12 @@ local npmDependencies = [
 ];
 
 local cargoTargets = cargo.all({
-  workspaceDependencies: [dep.project for dep in cargoDependencies + cargoBuildDependencies]
+  workspaceDependencies: [dep.project for dep in cargoDependencies + cargoBuildDependencies],
+  environment: LocalEnv(targets.dev)
 });
 
 {
-  targets: cargoTargets {
+  targets: cargoTargets + {
     source: cargoTargets.source + {
       dependencies: cargoTargets.source.dependencies + [
         {

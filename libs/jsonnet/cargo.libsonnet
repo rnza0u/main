@@ -36,7 +36,7 @@ local args = function (mainArgs) (if channel != 'stable' then ['+' + channel] el
             )
         }
     },
-    check(): {
+    check(environment={}): {
         executor: 'std:commands',
         description: 'Check source code.',
         cache: {},
@@ -44,7 +44,8 @@ local args = function (mainArgs) (if channel != 'stable' then ['+' + channel] el
             commands: [
                 {
                     program: 'cargo',
-                    arguments: args(['check'])
+                    arguments: args(['check']),
+                    environment: environment
                 }
             ]
         },
@@ -52,7 +53,7 @@ local args = function (mainArgs) (if channel != 'stable' then ['+' + channel] el
             'source'
         ]
     },
-    lint(): {
+    lint(environment={}): {
         executor: 'std:commands',
         description: 'Formats and check source files.',
         cache: {},
@@ -62,11 +63,13 @@ local args = function (mainArgs) (if channel != 'stable' then ['+' + channel] el
                     program: 'cargo',
                     arguments: (if channel != 'stable' then ['+' + channel] else []) 
                         + ['fmt']
-                        + (if blaze.vars.lint.fix then [] else ['--check'])
+                        + (if blaze.vars.lint.fix then [] else ['--check']),
+                    environment: environment
                 },
                 {
                     program: 'cargo',
-                    arguments: args(['clippy', '--no-deps'])
+                    arguments: args(['clippy', '--no-deps']),
+                    environment: environment
                 }
             ]
         },
@@ -78,14 +81,15 @@ local args = function (mainArgs) (if channel != 'stable' then ['+' + channel] el
     all(options = {
         workspaceDependencies: [],
         extraSourceDirectories: [],
-        extraTargetDirs: []
+        extraTargetDirs: [],
+        environment: {}
     }): {
         source: api.source(
             if std.objectHas(options, 'workspaceDependencies') then options.workspaceDependencies else [],
             if std.objectHas(options, 'extraSourceDirectories') then options.extraSourceDirectories else []
         ),
-        lint: api.lint(),
-        check: api.check(),
+        lint: api.lint(if std.objectHas(options, 'environment') then options.environment else {}),
+        check: api.check(if std.objectHas(options, 'environment') then options.environment else {}),
         clean: api.clean(if std.objectHas(options, 'extraTargetDirs') then options.extraTargetDirs else [])
     }
 }
