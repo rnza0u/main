@@ -4,7 +4,7 @@ description = "Blaze common shared types."
 repository = "https://github.com/Hakhenaton/main.git"
 homepage = "https://blaze-monorepo.dev"
 license = "MIT"
-version = "0.2.10"
+version = "0.2.11"
 edition = "2021"
 
 [lib]

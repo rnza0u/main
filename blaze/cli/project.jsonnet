@@ -111,7 +111,7 @@ local deploymentsByTarget = {
       function(name) 'target-' + targets[name].rustTriple, 
       finalTargets
     )),
-    publish: {
+    'publish-crate': {
       executor: executors.cargoPublish(),
       options: {
         dryRun: blaze.vars.blaze.publish.dryRun,
@@ -143,7 +143,7 @@ local deploymentsByTarget = {
   'ci-build': {
     dependencies: ['lint', 'check']
   },
-  'ci-release': {
-    dependencies: ['publish', 'push-tags']
+  publish: {
+    dependencies: ['publish-crate', 'push-tags']
   }
 }

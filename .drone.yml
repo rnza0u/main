@@ -28,8 +28,13 @@ steps:
     path: /var/run/docker.sock
   - name: blaze-builds
     path: /var/lib/blaze/builds
+  - name: ssh
+    path: /root/.ssh
 type: docker
 volumes:
+- host:
+    path: /var/lib/drone/.ssh
+  name: ssh
 - host:
     path: /var/lib/cache
   name: cache
@@ -43,6 +48,6 @@ workspace:
   path: /drone/src
 ---
 kind: signature
-hmac: cff634c8463fd3c1e64be0f8e537494f62d3f0ea1bef783831a60848b382ac96
+hmac: ad269afb6cf71de9d7a27e1451faa5bd3835ef06c632bac1a2243cef9dfd9aab
 
 ...

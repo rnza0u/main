@@ -63,11 +63,21 @@ local ci = {
                 {
                     name: 'blaze-builds',
                     path: '/var/lib/blaze/builds'
+                },
+                {
+                    name: 'ssh',
+                    path: '/root/.ssh'
                 }
             ]
         }
     ],
     volumes: [
+        {
+            name: 'ssh',
+            host: {
+                path: '/var/lib/drone/.ssh'
+            }
+        },
         {
             name: 'cache',
             host: {

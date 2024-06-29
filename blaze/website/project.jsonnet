@@ -135,17 +135,17 @@ local env = {
         'push-image': docker.push('blaze-website') + {
             dependencies: ['build-image']
         },
-        'ci-build': {
-            dependencies: [
-                'build-image',
-                'lint'
-            ]
-        },
         publish: {
             dependencies: [
                 'push-image'
             ]
         },
-        deploy: docker.composeUp()
+        deploy: docker.composeUp(),
+        'ci-build': {
+            dependencies: [
+                'build-image',
+                'lint'
+            ]
+        }
     }
 }
