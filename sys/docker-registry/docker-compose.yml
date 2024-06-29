@@ -1,0 +1,22 @@
+services:
+  registry:
+    image: registry:2
+    container_name: registry
+    env_file:
+      - .env
+    expose:
+      - "80"
+    restart: always
+    networks:
+      - reverse-proxy
+    volumes:
+      - "./config.yml:/etc/docker/registry/config.yml:ro"
+      - "./.htpasswd:/root/.htpasswd:ro"
+      - "registry-data:/var/lib/registry"
+networks:
+  reverse-proxy:
+    external: true
+    name: reverse-proxy
+volumes:
+  registry-data: {}
+

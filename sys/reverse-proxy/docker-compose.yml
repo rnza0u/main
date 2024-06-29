@@ -1,0 +1,27 @@
+services:
+  reverse-proxy:
+    image: registry.rnzaou.me/reverse-proxy:latest
+    container_name: reverse-proxy
+    ports:
+      - 80:80/tcp
+      - 443:443/tcp
+    restart: always
+    environment:
+      - CERTBOT_EMAIL=nzaou.renaud@gmail.com
+      - DHPARAM_SIZE=4096
+      - ELLIPTIC_CURVE=secp384r1
+      - RENEWAL_INTERVAL=1d
+      - STAGING=0
+      - USE_ECDSA=1
+      - DEBUG=1
+    networks:
+      - reverse-proxy
+    volumes:
+      - letsencrypt_data:/etc/letsencrypt
+      - ./htpasswd:/etc/nginx/htpasswd:ro
+networks:
+  reverse-proxy:
+    external: true
+    name: reverse-proxy
+volumes:
+  letsencrypt_data: {}

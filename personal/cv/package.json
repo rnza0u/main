@@ -1,0 +1,15 @@
+{
+  "name": "rnz-cv",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "parcel build --no-source-maps"
+  },
+  "description": "my personal CV (curriculum vitae)",
+  "source": "src/index.html",
+  "browserslist": "> 0.5%, last 2 versions, not dead",
+  "author": "Renaud N'zaou",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "parcel": "^2.11.0"
+  }
+}

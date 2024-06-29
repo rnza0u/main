@@ -1,0 +1,3 @@
+*.xip
+osx-sdk-builder/dist/
+cross

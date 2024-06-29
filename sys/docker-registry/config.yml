@@ -1,0 +1,12 @@
+version: 0.1
+http:
+  addr: 0.0.0.0:80
+storage:
+  filesystem:
+    rootdirectory: /var/lib/registry
+  delete:
+    enabled: true
+auth:
+  htpasswd:
+    path: /root/.htpasswd
+    realm: "Registry authentication"

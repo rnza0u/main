@@ -1,0 +1,15 @@
+[package]
+name = "blaze-devkit"
+description = "Rust devkit for the Blaze build system."
+repository = "https://github.com/Hakhenaton/main.git"
+homepage = "https://blaze-monorepo.dev"
+license = "MIT"
+version = "0.2.10"
+edition = "2021"
+
+[dependencies]
+blaze-common = { path = "../../common", version = "0.2.10" }
+hash-value = { version = "1.0" }
+url = "2.3.1"
+
+[lib]

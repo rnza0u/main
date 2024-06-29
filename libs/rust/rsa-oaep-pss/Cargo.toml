@@ -1,0 +1,36 @@
+[package]
+name = "rsa-oaep-pss"
+version = "1.1.0"
+edition = "2021"
+authors = ["N'zaou Renaud"]
+rust-version = "1.63"
+description = "A pure Rust implementation of the RSA public key cryptosystem"
+repository = "https://github.com/Hakhenaton/main/libs/rust/rsa-oaep-pss"
+license = "GPL-3.0-or-later"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name = "rsa_oaep_pss"
+crate-type = ["cdylib", "lib"]
+path = "src/lib.rs"
+
+[dependencies]
+num-bigint = "0.4.3"
+num-traits = "0.2.15"
+cipher = "0.4.3"
+rand_core = "0.6.4"
+num_cpus = "1.13.1"
+digest = { version="0.10.5", features=["alloc"] }
+asn1 = "0.12.2"
+base64 = "0.13.1"
+
+[dev-dependencies]
+rand = "0.8.5"
+sha2 = "0.10.6"
+paste = "1.0.9"
+criterion = "0.4.0"
+
+[[bench]]
+name = "benchmarks"
+harness = false

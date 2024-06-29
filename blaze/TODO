@@ -1,0 +1,3 @@
+- [] better line:column debug for jsonnet
+- [] cargo/npm resolvers
+- [] compose mode specs

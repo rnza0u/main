@@ -1,0 +1,11 @@
+**/target
+**/dist
+**/lib
+**/node_modules
+.blaze/*
+**/*.env
+/user-variables.*
+
+!.blaze/helpers
+!.blaze/.jpath
+!.blaze/variables.*

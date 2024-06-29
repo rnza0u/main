@@ -1,0 +1,21 @@
+{
+    "rust-analyzer.linkedProjects": [
+        "ci/Cargo.toml",
+        "blaze/core/Cargo.toml",
+        "blaze/tests/Cargo.toml",
+        "blaze/tests/tests/fixtures/executors/rust-checker/Cargo.toml",
+        "blaze/cli/Cargo.toml",
+        "blaze/common/Cargo.toml",
+        "blaze/rust/bridge/Cargo.toml",
+        "blaze/rust/devkit/Cargo.toml",
+        "blaze/cli-docs/Cargo.toml",
+        "blaze/downloads/Cargo.toml",
+        "libs/rust/hash-value/Cargo.toml",
+        "libs/rust/possibly/Cargo.toml",
+    ],
+    "rust-analyzer.cargo.extraEnv": {},
+    "rust-analyzer.cargo.extraArgs": ["-Z", "bindeps"],
+    "jsonnet.languageServer.jpath": [
+        "libs/jsonnet"
+    ]
+}

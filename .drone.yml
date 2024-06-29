@@ -1,0 +1,48 @@
+---
+image_pull_secrets:
+- DOCKER_REGISTRY_AUTHENTICATION_JSON
+kind: pipeline
+name: Main CI pipeline
+steps:
+- environment:
+    CACHE_ENABLED: "true"
+    CACHE_EXTRA_DIRS: '["/root/",".blaze/cache",".blaze/repositories",".blaze/rust"]'
+    CACHE_KEY: ci-${DRONE_BRANCH}
+    CACHE_STORAGE: /tmp/cache
+    DOCKER_REGISTRY_PASSWORD:
+      from_secret: DOCKER_REGISTRY_PASSWORD
+    DOCKER_REGISTRY_USERNAME:
+      from_secret: DOCKER_REGISTRY_USERNAME
+    PARALLELISM: "2"
+    ROOT: /drone/src
+    SELECTOR: '"All"'
+    TARGETS: ci-setup,ci-build,ci-test,ci-teardown
+    VARIABLES: '{"lint":{"fix":false}}'
+  image: registry.rnzaou.me/ci:latest
+  name: ci
+  pull: true
+  volumes:
+  - name: cache
+    path: /tmp/cache
+  - name: docker-socket
+    path: /var/run/docker.sock
+  - name: blaze-builds
+    path: /var/lib/blaze/builds
+type: docker
+volumes:
+- host:
+    path: /var/lib/cache
+  name: cache
+- host:
+    path: /var/lib/blaze/builds
+  name: blaze-builds
+- host:
+    path: /run/user/1002/docker.sock
+  name: docker-socket
+workspace:
+  path: /drone/src
+---
+kind: signature
+hmac: cff634c8463fd3c1e64be0f8e537494f62d3f0ea1bef783831a60848b382ac96
+
+...

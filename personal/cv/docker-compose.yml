@@ -1,0 +1,12 @@
+services:
+  cv:
+    image: registry.rnzaou.me/cv:latest
+    restart: always
+    expose:
+      - 80/tcp
+    networks:
+      - reverse-proxy
+networks:
+  reverse-proxy:
+    external: true
+    name: reverse-proxy

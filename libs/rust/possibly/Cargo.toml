@@ -1,0 +1,13 @@
+[package]
+name = "possibly"
+description = "Like matches!(), but returning an Option type."
+license = "MIT"
+version = "1.0.0"
+edition = "2021"
+repository = "https://github.com/Hakhenaton/main.git"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+
+[dependencies]
