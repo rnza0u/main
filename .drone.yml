@@ -6,7 +6,7 @@ name: Main CI pipeline
 steps:
 - environment:
     CACHE_ENABLED: "true"
-    CACHE_EXTRA_DIRS: '["/root/",".blaze/cache",".blaze/repositories",".blaze/rust"]'
+    CACHE_EXTRA_DIRS: '["/root/.cargo","/root/.npm","/root/.rustup",".blaze/cache",".blaze/repositories",".blaze/rust"]'
     CACHE_KEY: ci-${DRONE_BRANCH}
     CACHE_STORAGE: /tmp/cache
     DOCKER_REGISTRY_PASSWORD:
@@ -48,6 +48,6 @@ workspace:
   path: /drone/src
 ---
 kind: signature
-hmac: ad269afb6cf71de9d7a27e1451faa5bd3835ef06c632bac1a2243cef9dfd9aab
+hmac: e19a3885013a78d9b1292b8afa89df7d25de5281c85636ec0a51efcdb6713858
 
 ...

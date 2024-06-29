@@ -37,7 +37,9 @@ local ci = {
                 CACHE_KEY: 'ci-${DRONE_BRANCH}',
                 CACHE_STORAGE: cachePath,
                 CACHE_EXTRA_DIRS: std.manifestJsonMinified([
-                    '/root/',
+                    '/root/.cargo',
+                    '/root/.npm',
+                    '/root/.rustup',
                     '.blaze/cache',
                     '.blaze/repositories',
                     '.blaze/rust'
