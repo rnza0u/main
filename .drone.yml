@@ -5,19 +5,19 @@ kind: pipeline
 name: Main CI pipeline
 steps:
 - environment:
-    CACHE_ENABLED: "true"
-    CACHE_EXTRA_DIRS: '["/root/.cargo","/root/.npm","/root/.rustup",".blaze/cache",".blaze/repositories",".blaze/rust"]'
-    CACHE_KEY: ci-${DRONE_BRANCH}
-    CACHE_STORAGE: /tmp/cache
+    CACHE_ENABLED: ${CACHE_ENABLED:-true}
+    CACHE_EXTRA_DIRS: ${CACHE_EXTRA_DIRS:-["/root/.cargo","/root/.npm","/root/.rustup",".blaze/cache",".blaze/repositories",".blaze/rust"]}
+    CACHE_KEY: ${CACHE_KEY:-ci-${DRONE_BRANCH}}
+    CACHE_STORAGE: ${CACHE_STORAGE:-/tmp/cache}
     DOCKER_REGISTRY_PASSWORD:
       from_secret: DOCKER_REGISTRY_PASSWORD
     DOCKER_REGISTRY_USERNAME:
       from_secret: DOCKER_REGISTRY_USERNAME
-    PARALLELISM: "2"
-    ROOT: /drone/src
-    SELECTOR: '"All"'
-    TARGETS: ci-setup,ci-build,ci-test,ci-teardown
-    VARIABLES: '{"lint":{"fix":false}}'
+    PARALLELISM: ${PARALLELISM:-2}
+    ROOT: ${ROOT:-/drone/src}
+    SELECTOR: ${SELECTOR:-"All"}
+    TARGETS: ${TARGETS:-ci-setup,ci-build,ci-test,ci-teardown}
+    VARIABLES: ${VARIABLES:-{"lint":{"fix":false}}}
   image: registry.rnzaou.me/ci:latest
   name: ci
   pull: true
@@ -48,6 +48,6 @@ workspace:
   path: /drone/src
 ---
 kind: signature
-hmac: e19a3885013a78d9b1292b8afa89df7d25de5281c85636ec0a51efcdb6713858
+hmac: 9b30fe3c2e6f209014dd0cf5ed10579b2fd9fd457a898b5a53d61e38cb0f75b9
 
 ...
