@@ -32,6 +32,8 @@ local ci = {
         [
           'DOCKER_REGISTRY_USERNAME',
           'DOCKER_REGISTRY_PASSWORD',
+          'CARGO_TOKEN',
+          'NPM_TOKEN'
         ],
         {}
       ),

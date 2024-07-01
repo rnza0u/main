@@ -10,10 +10,14 @@ steps:
     CACHE_IGNORE_EXISTING: ${CACHE_IGNORE_EXISTING:-false}
     CACHE_KEY: ci-${DRONE_BRANCH}
     CACHE_STORAGE: /var/lib/cache
+    CARGO_TOKEN:
+      from_secret: CARGO_TOKEN
     DOCKER_REGISTRY_PASSWORD:
       from_secret: DOCKER_REGISTRY_PASSWORD
     DOCKER_REGISTRY_USERNAME:
       from_secret: DOCKER_REGISTRY_USERNAME
+    NPM_TOKEN:
+      from_secret: NPM_TOKEN
   image: registry.rnzaou.me/ci:latest
   name: ci
   pull: true
@@ -44,6 +48,6 @@ workspace:
   path: /drone/src
 ---
 kind: signature
-hmac: 32a3e5a4688ff3031e590535dab4876a5ba68e464de74500c3d46581e07f8ae9
+hmac: 47f6900b119ad8842109b9d940d691fdb76375e55fa570cf8096527aabd89a48
 
 ...
