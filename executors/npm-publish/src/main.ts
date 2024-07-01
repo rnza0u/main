@@ -44,7 +44,7 @@ const executor: Executor = async (context, userOptions) => {
     const { stdout } = await shell(
         'git', 
         ['status', '--porcelain'], 
-        context.workspace.root
+        { cwd: context.workspace.root }
     )
     
     if (stdout.length > 0)
@@ -63,7 +63,7 @@ const executor: Executor = async (context, userOptions) => {
             'public',
             ...(options.dryRun ? ['--dry-run'] : [])
         ],
-        context.project.root
+        { cwd: context.project.root }
     )
 
     if (options.dryRun) 

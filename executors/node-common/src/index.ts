@@ -1,13 +1,18 @@
 import { spawn } from 'child_process'
 
-export function shell(program: string, args: string[], cwd?: string): Promise<{ stdout: string, stderr: string }> {
+type ShellOptions = {
+    cwd?: string,
+    shell?: boolean
+}
+
+export function shell(program: string, args: string[], options: ShellOptions = {}): Promise<{ stdout: string, stderr: string }> {
     return new Promise((resolve, reject) => {
 
         console.log(`+ ${program} ${args.join(' ')}`)
 
         const child = spawn(program, args, {
-            shell: true,
-            cwd: cwd
+            cwd: options.cwd,
+            shell: options.shell
         })
 
         let stdout = ''

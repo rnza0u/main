@@ -64,7 +64,7 @@ const executor: Executor = async (context, userOptions) => {
             ...(options.dryRun ? ['--dry-run'] : []),
             ...(options.noCheck ? ['--no-verify'] : [])
         ],
-        context.project.root
+        { cwd: context.project.root }
     )
 
     if (options.dryRun)
