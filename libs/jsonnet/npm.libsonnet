@@ -11,7 +11,7 @@ local blaze = std.extVar('blaze');
             }, workspaceDependencies) + [
                 {
                     program: 'npm',
-                    arguments: ['install']
+                    arguments: [if std.objectHas(blaze.environment, 'CI') && blaze.environment['CI'] == "true" then 'ci' else 'install']
                 }
             ]
         },

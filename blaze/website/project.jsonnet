@@ -133,7 +133,7 @@ local env = {
             dependencies: ['build']
         },
         'push-image': docker.push('blaze-website') + {
-            dependencies: ['build-image']
+            dependencies: ['build-image', 'docker-registry:authenticate']
         },
         publish: {
             dependencies: [
