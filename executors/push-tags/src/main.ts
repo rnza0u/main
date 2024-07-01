@@ -45,6 +45,29 @@ const executor: Executor = async (context, options) => {
         )
     }
 
+    context.logger.info('setting remote before pushing tags')
+
+    await shell(
+        'git',
+        [
+            'remote',
+            'set-url',
+            'origin',
+            'git@github.com:Hakhenaton/main.git'
+        ]
+    )
+
+    await shell(
+        'git',
+        [
+            'remote',
+            'set-url',
+            '--push',
+            'origin',
+            'git@github.com:Hakhenaton/main.git'
+        ]
+    )
+
     context.logger.info(`pushing ${tags.size} tags`)
     await shell(
         'git',
