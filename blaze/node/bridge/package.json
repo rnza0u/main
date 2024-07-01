@@ -5,7 +5,7 @@
     "url": "https://github.com/Hakhenaton/main.git",
     "directory": "blaze/node/bridge"
   },
-  "version": "0.2.10",
+  "version": "0.2.11",
   "description": "A bridge between Blaze and Node.js executors.",
   "main": "dist/main.js",
   "type": "module",
@@ -15,7 +15,7 @@
   "author": "Renaud N'zaou",
   "license": "MIT",
   "dependencies": {
-    "@blaze-repo/node-devkit": "0.2.10",
+    "@blaze-repo/node-devkit": "0.2.11",
     "zod": "^3.22.4"
   },
   "devDependencies": {

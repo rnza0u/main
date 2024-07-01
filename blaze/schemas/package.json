@@ -1,7 +1,7 @@
 {
   "name": "@blaze-repo/json-schemas",
   "homepage": "https://blaze-monorepo.dev",
-  "version": "0.2.10",
+  "version": "0.2.11",
   "repository": {
     "url": "https://github.com/Hakhenaton/main.git",
     "directory": "blaze/schemas"

@@ -11,10 +11,10 @@ local blaze = std.extVar('blaze');
             },
             dependencies: [
                 'build',
-                'version-check'
+                'check-version'
             ]
         },
-        'version-check': {
+        'check-version': {
             executor: executors.npmVersionCheck(),
             options: {
                 version: blaze.vars.blaze.publish.version

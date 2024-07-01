@@ -142,6 +142,9 @@ local cargoTargets = cargo.all({
       }
     } 
   },
+  'deploy-all': {
+    dependencies: ['deploy-' + name for name in finalTargets]
+  },
   ci: {
     dependencies: ['lint', 'check']
   },
