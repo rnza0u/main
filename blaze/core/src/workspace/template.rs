@@ -102,7 +102,7 @@ impl<'reg> TemplateData<'reg> {
 
         Ok(Self {
             data: Self::initial_data(workspace_root)?,
-            generator: Self::generator(&scripts)?,
+            generator: Self::generator(workspace_root, &scripts)?,
         })
     }
 
@@ -177,11 +177,19 @@ impl<'reg> TemplateData<'reg> {
         Ok(Value::object(keys))
     }
 
-    fn generator(helper_scripts: &HashSet<PathBuf>) -> Result<Handlebars<'reg>> {
+    fn generator(
+        workspace_root: &Path,
+        helper_scripts: &HashSet<PathBuf>,
+    ) -> Result<Handlebars<'reg>> {
         let mut reg = Handlebars::new();
         reg.set_strict_mode(true);
         reg.register_escape_fn(no_escape);
-        reg.register_helper("shell", Box::new(ShHelper));
+        reg.register_helper(
+            "shell",
+            Box::new(ShHelper {
+                root: workspace_root.to_owned(),
+            }),
+        );
         reg.register_helper("random", Box::new(RandomHelper));
         for script in helper_scripts {
             let helper_name = script
@@ -195,7 +203,9 @@ impl<'reg> TemplateData<'reg> {
     }
 }
 
-struct ShHelper;
+struct ShHelper {
+    root: PathBuf,
+}
 
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -204,6 +214,7 @@ struct ShHelperNamedParams {
     trim: bool,
     shell: Option<PathBuf>,
     shell_kind: Option<ShellKind>,
+    cwd: Option<PathBuf>,
 }
 
 impl HelperDef for ShHelper {
@@ -255,7 +266,7 @@ impl HelperDef for ShHelper {
             program,
             arguments,
             ProcessOptions {
-                cwd: None,
+                cwd: Some(params.cwd.unwrap_or_else(|| self.root.to_owned())),
                 display_output: false,
                 ..Default::default()
             },

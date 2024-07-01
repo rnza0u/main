@@ -142,7 +142,7 @@ local cargoTargets = cargo.all({
       }
     } 
   },
-  'ci-build': {
+  ci: {
     dependencies: ['lint', 'check']
   },
   publish: {

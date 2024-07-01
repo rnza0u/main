@@ -26,7 +26,7 @@ local cargoTargets = cargo.all({
                 workspaceDependencies: workspaceDependencies
             }
         },
-        'ci-build': {
+        ci: {
             dependencies: ['check', 'lint']
         }
     }

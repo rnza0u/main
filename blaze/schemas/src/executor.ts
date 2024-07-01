@@ -5,40 +5,6 @@ const executorKindSchema = {
     enum: ['Rust', 'Node']
 } satisfies Schema
 
-const httpAuthentication = {
-    oneOf: [
-        strictObject({
-            properties: {
-                mode: {
-                    const: 'Basic'
-                },
-                username: notEmptyString,
-                password: notEmptyString
-            },
-            required: ['mode', 'username', 'password']
-        }),
-        strictObject({
-            properties: {
-                mode: {
-                    const: 'Digest'
-                },
-                username: notEmptyString,
-                password: notEmptyString
-            },
-            required: ['mode', 'username', 'password']
-        }),
-        strictObject({
-            properties: {
-                mode: {
-                    const: 'Bearer'
-                },
-                token: notEmptyString
-            },
-            required: ['mode', 'token']
-        })
-    ]
-} satisfies Schema
-
 const gitPlainAuthentication = strictObject({
     properties: {
         username: notEmptyString,

@@ -146,6 +146,13 @@ The `shell` helper always run commands in a shell. You can also customize the sh
 "{{ shell \"whoami\" shell=\"/bin/bash\" shellKind=\"Posix\" trim=true }}"
 ```
 
+By default, commands provided to the `shell` helper run at the workspace root. You can customize this location by providing a `cwd` parameter.
+
+```json
+// this will output /tmp
+"{{ shell \"pwd\" cwd=\"/tmp\" }}"
+```
+
 #### The `random` helper
 
 Basic usage is as follows :

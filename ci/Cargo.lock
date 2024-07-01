@@ -261,7 +261,6 @@ dependencies = [
  "blaze-core",
  "flate2",
  "fs4",
- "hash-value",
  "possibly",
  "serde",
  "serde_json",

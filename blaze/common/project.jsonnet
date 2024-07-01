@@ -19,7 +19,7 @@ local cargoTargets = cargo.all();
                 version: blaze.vars.blaze.publish.version
             }
         },
-        'ci-build': {
+        ci: {
             dependencies: ['lint', 'check']
         }
     }

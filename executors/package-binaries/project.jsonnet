@@ -6,7 +6,7 @@ local npmTargets = npm.all('blaze-deploy', {
 
 {
     targets: npmTargets + {
-        'ci-build': {
+        ci: {
             dependencies: ['lint', 'build']
         }
     }

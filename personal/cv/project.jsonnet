@@ -61,7 +61,7 @@ local npm = import 'npm.libsonnet';
         clean: npm.clean({
             extraDirectories: ['.parcel-cache']
         }),
-        'ci-build': {
+        ci: {
             dependencies: ['build-image']
         },
         publish: {

@@ -32,7 +32,7 @@ local cargoTargets = cargo.all({
                 'source'
             ]
         },
-        'ci-build': {
+        ci: {
             dependencies: ['lint', 'check']
         }
     }

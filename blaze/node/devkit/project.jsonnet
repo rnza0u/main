@@ -20,7 +20,7 @@ local blaze = std.extVar('blaze');
                 version: blaze.vars.blaze.publish.version
             }
         },
-        'ci-build': {
+        ci: {
             dependencies: ['lint', 'build']
         }
     }

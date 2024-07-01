@@ -166,17 +166,16 @@ impl Value {
         match (source.as_ref(), self) {
             (Value::Object(src), Value::Object(dst)) => {
                 for (key, val) in src {
-
-                    if val.is_null(){
+                    if val.is_null() {
                         let _ = dst.remove(key);
-                        continue
+                        continue;
                     }
 
                     if let Some(existing) = dst.get_mut(key) {
                         existing.overwrite(val);
-                        continue
+                        continue;
                     }
-                    
+
                     let _ = dst.insert(key.clone(), val.clone());
                 }
             }

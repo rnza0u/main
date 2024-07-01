@@ -15,6 +15,7 @@ ARG CI_BINARY="target/x86_64-unknown-linux-musl/release/ci"
 RUN apk update && \
     apk add alpine-sdk \
     pkgconfig \
+    git \
     curl \
     openssl \
     openssl-dev \
@@ -23,7 +24,7 @@ RUN apk update && \
     rustup=~${RUSTUP_VERSION} \
     nodejs=~${NODE_VERSION} \
     npm=~${NPM_VERSION} && \
-    rustup-init --default-toolchain none -y && \
+    rustup-init -y && \
     "$CARGO_HOME/bin/rustup" toolchain install ${RUST_VERSION} \
     --target x86_64-unknown-linux-gnu \
     --target x86_64-unknown-linux-musl \

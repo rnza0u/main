@@ -50,7 +50,7 @@ local cargoTargets = cargo.all();
         publish: {
             dependencies: ['push-image']
         },
-        'ci-build': {
+        ci: {
             dependencies: ['check', 'lint']
         }
     }

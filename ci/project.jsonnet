@@ -80,10 +80,14 @@ local cargoTargets = cargo.all();
                 'build-image'
             ]
         },
-        'run': {
+        'run-scm-build': {
             executor: 'std:commands',
             options: {
                 commands: [
+                    {
+                        program: 'mkdir',
+                        arguments: ['-p', '/tmp/cache']
+                    },
                     {
                         program: 'docker',
                         arguments: [
@@ -92,10 +96,20 @@ local cargoTargets = cargo.all();
                             '/var/run/docker.sock:/var/run/docker.sock',
                             '--volume',
                             '{{ root }}:/workspace:rw',
+                            '--volume',
+                            '/tmp/cache:/var/lib/cache:rw',
                             '--env',
-                            'OPTIONS=' + std.manifestJsonMinified(blaze.vars.ci.runOptions),
+                            'DRONE_BRANCH=master',
+                            '--env',
+                            'DRONE_BUILD_EVENT=push',
+                            '--env',
+                            'DRONE_WORKSPACE=/workspace',
                             'registry.rnzaou.me/ci:latest',
                         ]
+                    },
+                    {
+                        program: 'rm',
+                        arguments: ['-rf', '/tmp/cache']
                     }
                 ]
             },

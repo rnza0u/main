@@ -18,7 +18,7 @@ async function build(): Promise<void> {
     await Promise.all(Object.entries(schemas).map(async ([name, schema]) => {
 
         if (typeof schema !== 'object' || !schema.$id)
-            throw Error(`no $id for schema`)
+            throw Error('no $id for schema')
 
         registerSchema(schema, schema.$id)
         

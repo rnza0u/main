@@ -14,16 +14,6 @@
             runArgs: ['version'], 
             tests: null
         },
-        ci: {
-            runOptions: {
-                parallelism: 'Infinite',
-                root: '/workspace',
-                branch: 'master',
-                targets: [ 
-                    'ci-build'
-                ]
-            }
-        },
         sudo: false
     },
     include: [

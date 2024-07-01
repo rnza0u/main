@@ -141,7 +141,7 @@ local env = {
             ]
         },
         deploy: docker.composeUp(),
-        'ci-build': {
+        ci: {
             dependencies: [
                 'build-image',
                 'lint'

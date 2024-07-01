@@ -1,45 +1,9 @@
-local secrets = [
-  'DOCKER_REGISTRY_USERNAME',
-  'DOCKER_REGISTRY_PASSWORD',
-];
-
-local workspacePath = '/drone/src';
-local cachePath = '/tmp/cache';
-
-local ciOptions = {
-  ROOT: workspacePath,
-  PARALLELISM: '2',
-  TARGETS: std.join(',', [
-    'ci-setup',
-    'ci-build',
-    'ci-test',
-    'ci-teardown',
-  ]),
-  SELECTOR: std.manifestJsonMinified('All'),
-  VARIABLES: std.manifestJsonMinified({
-    lint: {
-      fix: false,
-    },
-  }),
-  CACHE_ENABLED: 'true',
-  CACHE_KEY: 'ci-${DRONE_BRANCH}',
-  CACHE_STORAGE: cachePath,
-  CACHE_EXTRA_DIRS: std.manifestJsonMinified([
-    '/root/.cargo',
-    '/root/.npm',
-    '/root/.rustup',
-    '.blaze/cache',
-    '.blaze/repositories',
-    '.blaze/rust',
-  ]),
-};
-
 local ci = {
   kind: 'pipeline',
   type: 'docker',
   name: 'Main CI pipeline',
   workspace: {
-    path: workspacePath,
+    path: '/drone/src',
   },
   steps: [
     {
@@ -47,20 +11,34 @@ local ci = {
       image: 'registry.rnzaou.me/ci:latest',
       pull: true,
       environment: {
-        [name]: '${' + name + ':-' + ciOptions[name] + '}' for name in std.objectFields(ciOptions)
+        CACHE_ENABLED: '${CACHE_ENABLED:-true}',
+        CACHE_IGNORE_EXISTING: '${CACHE_IGNORE_EXISTING:-false}',
+        CACHE_STORAGE: '/var/lib/cache',
+        CACHE_KEY: 'ci-${DRONE_BRANCH}',
+        CACHE_EXTRA_DIRS: std.join(',', [
+            "/root/.cargo",
+            "/root/.npm",
+            "/root/.rustup",
+            ".blaze/cache",
+            ".blaze/repositories",
+            ".blaze/rust"
+        ])
       } + std.foldl(
         function(vars, secret) vars {
           [secret]: {
             from_secret: secret,
           },
         },
-        secrets,
+        [
+          'DOCKER_REGISTRY_USERNAME',
+          'DOCKER_REGISTRY_PASSWORD',
+        ],
         {}
       ),
       volumes: [
         {
           name: 'cache',
-          path: cachePath,
+          path: '/var/lib/cache',
         },
         {
           name: 'docker-socket',

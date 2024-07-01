@@ -1,0 +1,10 @@
+{
+    "parallelism": 2,
+    "selector": "All",
+    "target": "ci",
+    "variables": {
+        "lint": {
+            "fix": false
+        }
+    }
+}
