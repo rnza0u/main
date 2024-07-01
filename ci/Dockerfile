@@ -17,6 +17,7 @@ RUN apk update && \
     pkgconfig \
     git \
     curl \
+    openssh \
     openssl \
     openssl-dev \
     openssl-libs-static \
