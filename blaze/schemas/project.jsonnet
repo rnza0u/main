@@ -13,7 +13,7 @@ local npmTargets = npm.all('@blaze-repos/json-schemas', {
             options: {
                 dryRun: blaze.vars.blaze.publish.dryRun
             },
-            dependencies: ['check-version']
+            dependencies: ['check-version', 'build']
         },
         'check-version': {
             executor: executors.npmVersionCheck(),
