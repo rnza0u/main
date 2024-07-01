@@ -7,7 +7,7 @@ local executors = import 'executors.libsonnet';
 
 local workspaceDependencies = ['blaze-common', 'blaze-core'];
 
-local finalTargets = std.filter(function (name) targets[name].rustTriple != null, std.objectFields(targets));
+local finalTargets = std.filter(function(name) targets[name].rustTriple != null, std.objectFields(targets));
 
 local buildsByTarget = {
   ['build-' + name]: {
@@ -18,35 +18,36 @@ local buildsByTarget = {
         {
           program: if useCross then 'cross' else 'cargo',
           arguments: [
-            '+nightly',
-            'build',
-          ]
-          + (if targets[name].release then ['--release'] else [])
-          + (if targets[name].rustTriple != null then ['--target', targets[name].rustTriple] else []),
+                       '+nightly',
+                       'build',
+                     ]
+                     + (if targets[name].release then ['--release'] else [])
+                     + (if targets[name].rustTriple != null then ['--target', targets[name].rustTriple] else []),
           environment: {
-            CARGO_TARGET_DIR: blaze.project.root + '/' + targets[name].targetDir,
-          } + LocalEnv(targets[name]) 
-          + (if useCross then { 
-            BLAZE_ROOT: blaze.root + '/blaze',
-            CROSS_CONFIG: blaze.root + '/blaze/Cross.toml'
-          } else {})
-        }
-      ]
+                         CARGO_TARGET_DIR: blaze.project.root + '/' + targets[name].targetDir,
+                       } + LocalEnv(targets[name])
+                       + (if useCross then {
+                            BLAZE_ROOT: blaze.root + '/blaze',
+                            CROSS_CONFIG: blaze.root + '/blaze/Cross.toml',
+                          } else {}),
+        },
+      ],
     },
     cache: {
       invalidateWhen: {
         outputChanges: [
           {
             root: targets[name].cli.outputPath,
-            pattern: targets[name].cli.filename
-          }
-        ]
-      }
+            pattern: targets[name].cli.filename,
+          },
+        ],
+      },
     },
     dependencies: [
-      'source'
+      'source',
     ] + (if useCross then ['docker-registry:authenticate'] else []),
-  } for name in std.objectFields(targets)
+  }
+  for name in std.objectFields(targets)
 };
 
 local deploymentsByTarget = {
@@ -56,21 +57,22 @@ local deploymentsByTarget = {
       binPath: targets[name].cli.outputPath + '/' + targets[name].cli.filename,
       outputPath: '/var/lib/blaze/builds',
       platform: name,
-      overwrite: true
+      overwrite: true,
     },
     dependencies: [
-      'build-' + name
-    ]
-  } for name in finalTargets
+      'build-' + name,
+    ],
+  }
+  for name in finalTargets
 };
 
 local cargoTargets = cargo.all({
   workspaceDependencies: workspaceDependencies,
   environment: LocalEnv(targets.dev),
   extraTargetDirs: std.map(
-    function(name) 'target-' + targets[name].rustTriple, 
+    function(name) 'target-' + targets[name].rustTriple,
     finalTargets
-  )
+  ),
 });
 
 {
@@ -83,19 +85,19 @@ local cargoTargets = cargo.all({
             program: 'cargo',
             arguments: [
               '+nightly',
-              'run', 
+              'run',
             ] + ['--'] + blaze.vars.blaze.runArgs,
-            environment: LocalEnv(targets['dev'])
-          }
+            environment: LocalEnv(targets.dev),
+          },
         ],
-        shell: true
+        shell: true,
       },
-      dependencies: ['source']
+      dependencies: ['source'],
     },
     build: {
       cache: {},
       dependencies: [
-        'build-dev'
+        'build-dev',
       ],
     },
     install: {
@@ -105,50 +107,50 @@ local cargoTargets = cargo.all({
           {
             program: 'cargo',
             arguments: ['+nightly', 'install', '--force', '--path', '{{ project.root }}'],
-            environment: LocalEnv(targets.release)
-          }
+            environment: LocalEnv(targets.release),
+          },
         ],
       },
       dependencies: [
-        'source'
-      ]
+        'source',
+      ],
     },
     'publish-crate': {
       executor: executors.cargoPublish(),
       options: {
         dryRun: blaze.vars.blaze.publish.dryRun,
-        channel: 'nightly'
+        channel: 'nightly',
       },
       dependencies: [
         'check-version',
         {
           projects: workspaceDependencies,
-          target: 'publish'
-        }
-      ]
+          target: 'publish',
+        },
+      ],
     },
     'push-tags': {
       executor: executors.pushTags(),
       options: {
         dryRun: blaze.vars.blaze.publish.dryRun,
-        tags: ['blaze-' + blaze.vars.blaze.publish.version]
+        tags: ['blaze-' + blaze.vars.blaze.publish.version],
       },
     },
     'check-version': {
       executor: executors.cargoVersionCheck(),
       options: {
         version: blaze.vars.blaze.publish.version,
-        workspaceDependencies: workspaceDependencies
-      }
-    } 
+        workspaceDependencies: workspaceDependencies,
+      },
+    },
+    'deploy-all': {
+      dependencies: ['deploy-' + name for name in finalTargets],
+    },
+    ci: {
+      dependencies: ['lint', 'check'],
+    },
+    publish: {
+      dependencies: ['publish-crate', 'push-tags'],
+    },
   },
-  'deploy-all': {
-    dependencies: ['deploy-' + name for name in finalTargets]
-  },
-  ci: {
-    dependencies: ['lint', 'check']
-  },
-  publish: {
-    dependencies: ['publish-crate', 'push-tags']
-  }
 }
