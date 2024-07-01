@@ -1,8 +1,8 @@
+local blaze = std.extVar('blaze');
 local targets = import '../targets.jsonnet';
-local cargo = (import 'cargo.libsonnet')('nightly', ['-Z', 'bindeps']);
+local cargo = (import 'cargo.libsonnet')(blaze.vars.blaze.rust.channel, ['-Z', 'bindeps']);
 local executors = import 'executors.libsonnet';
 local LocalEnv = import './local-env.jsonnet';
-local blaze = std.extVar('blaze');
 
 local cargoDependencies = [
   { project: 'blaze-common', crate: 'blaze-common' },
@@ -36,7 +36,7 @@ local cargoTargets = cargo.all({
       executor: executors.cargoPublish(),
       options: {
         dryRun: blaze.vars.blaze.publish.dryRun,
-        channel: 'nightly'
+        channel: blaze.vars.blaze.rust.channel
       },
       dependencies: [
         'check-version',

@@ -12,7 +12,10 @@
                 dryRun: false
             },
             runArgs: ['version'], 
-            tests: null
+            tests: null,
+            rust: {
+                channel: 'nightly-2024-06-25'
+            }
         },
         sudo: false
     },

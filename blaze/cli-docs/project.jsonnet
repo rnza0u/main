@@ -1,6 +1,7 @@
+local blaze = std.extVar('blaze');
 local targets = import '../targets.jsonnet';
 local LocalEnv = import '../core/local-env.jsonnet';
-local cargo = (import 'cargo.libsonnet')('nightly', ['-Z', 'bindeps']);
+local cargo = (import 'cargo.libsonnet')(blaze.vars.blaze.rust.channel, ['-Z', 'bindeps']);
 
 local cargoTargets = cargo.all({
     workspaceDependencies: ['blaze-cli'],
@@ -16,7 +17,7 @@ local cargoTargets = cargo.all({
                 commands: [
                     {
                         program: 'cargo',
-                        arguments: ['+nightly', 'run', '-Z', 'bindeps', '--release'],
+                        arguments: ['+' + blaze.vars.blaze.rust.channel, 'run', '-Z', 'bindeps', '--release'],
                         environment: LocalEnv(targets.release) + {
                             OUT_DIR: '{{ project.root }}/dist'
                         }

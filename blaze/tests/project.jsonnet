@@ -1,7 +1,7 @@
+local blaze = std.extVar('blaze');
 local LocalEnv = import '../core/local-env.jsonnet';
 local targets = import '../targets.jsonnet';
-local cargo = (import 'cargo.libsonnet')('nightly', ['-Z', 'bindeps']);
-local blaze = std.extVar('blaze');
+local cargo = (import 'cargo.libsonnet')(blaze.vars.blaze.rust.channel, ['-Z', 'bindeps']);
 local executors = import 'executors.libsonnet';
 
 local workspaceDependencies = ['blaze-core'];

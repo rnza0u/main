@@ -2,7 +2,7 @@ local blaze = std.extVar('blaze');
 local LocalEnv = import '../core/local-env.jsonnet';
 local targets = import '../targets.jsonnet';
 local cargoExtraOpt = ['-Z', 'bindeps'];
-local cargo = (import 'cargo.libsonnet')('nightly', cargoExtraOpt);
+local cargo = (import 'cargo.libsonnet')(blaze.vars.blaze.rust.channel, cargoExtraOpt);
 local executors = import 'executors.libsonnet';
 
 local workspaceDependencies = ['blaze-common', 'blaze-core'];
@@ -18,7 +18,7 @@ local buildsByTarget = {
         {
           program: if useCross then 'cross' else 'cargo',
           arguments: [
-                       '+nightly',
+                       '+' + blaze.vars.blaze.rust.channel,
                        'build',
                      ]
                      + (if targets[name].release then ['--release'] else [])
@@ -84,7 +84,7 @@ local cargoTargets = cargo.all({
           {
             program: 'cargo',
             arguments: [
-              '+nightly',
+              '+' + blaze.vars.blaze.rust.channel,
               'run',
             ] + ['--'] + blaze.vars.blaze.runArgs,
             environment: LocalEnv(targets.dev),
@@ -106,7 +106,7 @@ local cargoTargets = cargo.all({
         commands: [
           {
             program: 'cargo',
-            arguments: ['+nightly', 'install', '--force', '--path', '{{ project.root }}'],
+            arguments: ['+' + blaze.vars.blaze.rust.channel, 'install', '--force', '--path', '{{ project.root }}'],
             environment: LocalEnv(targets.release),
           },
         ],
@@ -119,7 +119,7 @@ local cargoTargets = cargo.all({
       executor: executors.cargoPublish(),
       options: {
         dryRun: blaze.vars.blaze.publish.dryRun,
-        channel: 'nightly',
+        channel: blaze.vars.blaze.rust.channel,
       },
       dependencies: [
         'check-version',
