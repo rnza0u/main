@@ -12,19 +12,19 @@ export default function About(){
                 </a>
                 <h1>About</h1>
                 <p>
-                    It is quite noticeable that our development tooling stack has become increasingly complex in recent years, 
+                    It is pretty clear that our development tooling stack has become increasingly complex in recent years, 
                     especially in web development.
                 </p>
-                <p>More than ever, it is so important to have a way to make all these technologies work together for the sole purpose of being productive.</p>
+                <p>More than ever, it is important to have a way to make all these technologies work together, for the sole purpose of being productive.</p>
                 <p>
-                    There are [many monorepo tools](https://monorepo.tools/) we could use then, however i thought they were either too complex or too tied to one or another specific technology ecosystem.
+                    There are <a target="_blank" href="https://monorepo.tools/">many monorepo tools</a> we could use then, however i thought they were either too complex or too tied to one or another specific technology ecosystem.
                 </p>
                 <p>
                     I wrote Blaze for my personal usage because i really wanted to have a generic and simple monorepo tool that i could re-use across my projects.
                     I hope you like it and find it as useful as i do !
                 </p>
                 <p>
-                    <i>[The author](https://rnzaou.me)</i>
+                    <a target="_blank" href="https://rnzaou.me"><i>The author</i></a>
                 </p>
             </article>
         </main>

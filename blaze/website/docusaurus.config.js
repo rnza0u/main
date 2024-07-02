@@ -95,7 +95,7 @@ const config = {
                     to: 'downloads'
                 },
                 {
-                    href: 'https://github.com/Hakhenaton/main/blaze',
+                    href: 'https://github.com/Hakhenaton/main/tree/master/blaze',
                     label: 'GitHub',
                     position: 'right',
                 },

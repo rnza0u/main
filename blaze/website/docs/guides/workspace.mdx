@@ -58,7 +58,8 @@ Here is an example of the default version that gets generated when calling the `
     "defaultSelector": [],
     "selectors": {},
     "parallelism": "None",
-    "logLevel": "Warn"
+    "logLevel": "Warn",
+    "resolutionParallelism": "None"
   }
 }
 ```
@@ -258,11 +259,11 @@ You can define named selectors in the workspace configuration, at the `settings.
 }
 ```
 
-When using the [`run`](../cli/run) command, the `-s` option (`--selector` in its long form) allows you to use one of these named selectors. 
+When using a command that requires selecting projects, the `-s` option (`--selector` in its long form) allows you to use one of these named selectors. 
 
 ##### Default selector
 
-When using the `run` command, you can omit the project selector.
+WHen selecting projects, you can also omit the project selector.
 
 In that case, any selector declared at the `settings.defaultSelector` key will be used.
 
