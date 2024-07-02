@@ -85,7 +85,11 @@ impl Value {
     }
 
     pub fn as_signed(&self) -> Option<i64> {
-        possibly!(self, Self::Signed(i) => *i)
+        match self {
+            Self::Signed(i) => Some(*i),
+            Self::Unsigned(u) => i64::try_from(*u).ok(),
+            _ => None
+        }
     }
 
     pub fn as_unsigned(&self) -> Option<u64> {

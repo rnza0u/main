@@ -14,19 +14,22 @@ import { downloadUrl } from '@site/src/services/downloads'
 
 Let's follow a few steps and we'll get you started in less than 10 minutes.
 
-## Installation
+## Choose an installation method
 
 Blaze comes packaged as a single executable file.
 
-It can be installed on the following platforms :
+It can be installed on all platforms that support the Rust runtime and Node.js (Linux, MacOS, Windows).
 
-- Linux
-- Mac OS
-- Windows
+There are two ways to install it :
 
-Pre-built binaries are provided for these three platforms.
+- [Using pre-built binaries](#installing-using-pre-built-binaries)
+- [Compiling from source code](#installing-from-source-code)
 
-You can find direct download links for each platform [here](/downloads).
+## Installing using pre-built binaries
+
+Pre-built binaries are provided for the most common platforms.
+
+If you want to skip this guide and install the binary by yourself, you can go ahead and find direct download links for each platform [here](/downloads).
 
 ### Install for Linux or Mac OSX
 
@@ -85,13 +88,13 @@ blaze version
 - Add its parent directory to your `Path` environment variable.
 - Restart your shell environment and run `blaze version`.
 
-## Building from source code
+## Installing from source code
 
 <BrowserOnly>{
   () => <WithLatestVersion>{
       version => <>
         <p>
-          You can build your own binary <a target="_blank" href={`https://github.com/Hakhenaton/main/tree/blaze-${version}`}>from the source code</a> using different methods.
+          You can install your own binary <a target="_blank" href={`https://github.com/Hakhenaton/main/tree/blaze-${version}`}>from the source code</a> using different methods.
         </p>
         
         <p>You will need a Rust nightly toolchain (&gt;=2024-06-25). You can download it using <a href="https://rustup.rs"><code>rustup</code></a> :</p>
@@ -103,6 +106,14 @@ blaze version
         <Admonition type='info'>
           By default, the provided scripts will build the last version of Blaze, so you might want to modify the version number.
         </Admonition>
+
+        <p>In order to use all Blaze features, you will also need the following tools on your system :</p>
+
+        <ul>
+          <li>A C compiler</li>
+          <li><code>pkg-config</code></li>
+          <li>OpenSSL development packages (for example, <code>libssl-dev</code> on Ubuntu or <code>openssl-devel</code> on Fedora.)</li>
+        </ul>
 
         <h3 style={{ fontSize: '1.25rem' }}>First method (using Cargo)</h3>
         

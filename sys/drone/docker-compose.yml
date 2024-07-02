@@ -11,6 +11,9 @@ services:
       - DRONE_REGISTRATION_CLOSED=true
       - DRONE_COOKIE_TIMEOUT=72h
       - DRONE_LOGS_COLOR=true
+      - DRONE_HTTP_SSL_REDIRECT=true
+      - DRONE_HTTP_SSL_TEMPORARY_REDIRECT=true
+      - DRONE_HTTP_SSL_HOST=drone.rnzaou.me
     restart: always
     networks:
       - reverse-proxy

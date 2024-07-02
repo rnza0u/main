@@ -14,11 +14,13 @@ const gitPlainAuthentication = strictObject({
 
 const httpTransportProperties: Record<string, Schema> = {
     insecure: {
+        description: 'Disable SSL/TLS certificate verification. Only for debugging purpose.',
         type: 'boolean',
         default: false
     },
     headers: {
         type: 'object',
+        description: 'Extra HTTP headers for the request.',
         patternProperties: {
             '^.+$': notEmptyString
         },
@@ -28,10 +30,12 @@ const httpTransportProperties: Record<string, Schema> = {
 
 const sshTransportProperties: Record<string, Schema> = {
     insecure: {
+        description: 'Disable SSH server public key verification. Only for debugging purpose.',
         type: 'boolean',
         default: false
     },
     fingerprints: {
+        description: 'An array of trusted SSH server fingerprints to use when validating.',
         type: 'array', 
         items: {
             type: 'string',
@@ -41,13 +45,29 @@ const sshTransportProperties: Record<string, Schema> = {
 }
 
 const gitOptionsProperties: Record<string, Schema> = {
-    path: notEmptyString,
-    branch: notEmptyString,
-    rev: notEmptyString,
-    tag: notEmptyString,
-    kind: executorKindSchema,
+    path: {
+        ...notEmptyString,
+        description: 'Path to the executor within the repository. Defaults to the repository root directory if not provided.'
+    },
+    branch: {
+        ...notEmptyString,
+        description: 'Checkout a specific branch.'
+    },
+    rev: {
+        ...notEmptyString,
+        description: 'Checkout using a specific revision string (typically a commit hash).'
+    },
+    tag: {
+        ...notEmptyString,
+        description: 'Checkout a specific tag.'
+    },
+    kind: {
+        ...executorKindSchema,
+        description: 'Specify executor type if Blaze cannot infer it.'
+    },
     pull: {
         type: 'boolean',
+        description: 'Always pull last changes from remote.',
         default: false
     }
 }
@@ -55,6 +75,7 @@ const gitOptionsProperties: Record<string, Schema> = {
 const sshAuthentication = {
     oneOf: [
         strictObject({
+            description: 'Username/password authentication.',
             properties: {
                 username: notEmptyString,
                 password: notEmptyString
@@ -62,6 +83,7 @@ const sshAuthentication = {
             required: ['password']
         }),
         strictObject({
+            description: 'Private key authentication.',
             properties: {
                 key: notEmptyString,
                 passphrase: notEmptyString,
@@ -74,8 +96,12 @@ const sshAuthentication = {
 
 export const executorSchema = {
     oneOf: [
-        notEmptyString,
+        {
+            ...notEmptyString,
+            description: 'Executor URL.'
+        },
         strictObject({
+            description: 'Standard executor configuration.',
             properties: {
                 url: {
                     type: 'string',
@@ -89,18 +115,25 @@ export const executorSchema = {
             required: ['url']
         }),
         strictObject({
+            description: 'Local filesystem executor configuration',
             properties: {
                 url: {
                     type: 'string',
+                    description: 'URL containing the path to the executor files.',
                     pattern: '^file://.+$'
                 },
                 rebuild: {
                     enum: ['Always', 'OnChanges'],
+                    description: 'When should Blaze rebuild the executor from source.',
                     default: 'OnChanges'
                 },
-                kind: executorKindSchema,
+                kind: {
+                    ...executorKindSchema,
+                    description: 'Executor kind, if Blaze cannot infer it.'
+                },
                 watch: {
                     type: 'array',
+                    description: 'What files should be watched for changes when rebuild strategy is set to \"OnChanges\"',
                     items: fileChangesMatcherSchema
                 }
             },
@@ -109,13 +142,18 @@ export const executorSchema = {
         strictObject({
             properties: {
                 url: {
+                    description: 'Git repository HTTP URL',
                     type: 'string',
                     pattern: '^https?://.+$'
                 },
                 format: {
+                    description: 'Tells Blaze that the HTTP resource is a Git repository.',
                     const: 'Git'
                 },
-                authentication: gitPlainAuthentication,
+                authentication: {
+                    ...gitPlainAuthentication,
+                    description: 'Authentication to use when cloning over HTTP.'
+                },
                 ...httpTransportProperties,
                 ...gitOptionsProperties
             },
@@ -125,9 +163,13 @@ export const executorSchema = {
             properties: {
                 url: {
                     type: 'string',
+                    description: 'Git repository SSH URL',
                     pattern: '^ssh://.+$'
                 },
-                authentication: sshAuthentication,
+                authentication: {
+                    description: 'Authentication to use when connecting to the SSH server.',
+                    ...sshAuthentication
+                },
                 ...gitOptionsProperties,
                 ...sshTransportProperties
             }

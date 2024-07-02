@@ -207,15 +207,17 @@ Finally we can use the helper anywhere in a template string.
 "{{ my-uppercase  \"Hello world!\" }}"
 ```
 
+The interpolated value will then be: `HELLO WORLD!`.
+
 :::info
 
-Handlebars helpers support both indexed and named parameters, please checkout 
+Handlebars helpers support both indexed and hash (named) parameters.
+
+- Indexed parameters are accessed using the `params` variable.
+- Hash (named) parameters are accessed using the `hash` variable.
 
 :::
 
-The interpolated value will then be: `HELLO WORLD!`.
-
-In this example
 
 ## Custom variables
 
