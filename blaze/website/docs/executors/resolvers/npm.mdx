@@ -13,8 +13,8 @@ When using the `npm` scheme, Blaze will load the executor from the specified NPM
 
 Here are a few examples :
 
-- `npm:///my-custom-executor` from the official NPM registry.
-- `npm://npm.my-company.com/my-custom-executor` from a private NPM registry. 
+- `npm:///my-custom-executor` fetches `my-custom-executor` from the official NPM registry.
+- `npm://npm.my-company.com/my-custom-executor` fetches `my-custom-executor` from a private NPM registry called `npm.my-company.com`. 
 
 The full URL must match the following format : `npm://[<host>[:<port>]]/<package>`
 
@@ -51,6 +51,12 @@ The following authentication modes are supported when resolving executors from N
 
 - Using a username and password
 - Using an access token
+
+:::info
+
+By default, credentials from your global NPM configuration (`~/.npmrc`) will be used.
+
+:::
 
 ### Username and password authentication
 

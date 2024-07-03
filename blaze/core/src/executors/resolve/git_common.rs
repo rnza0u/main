@@ -1,44 +1,53 @@
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 use anyhow::anyhow;
 use blaze_common::{
-    error::{Error, Result},
-    executor::{GitCheckout, GitOptions},
-    value::{to_value, Value},
+    error::{Error, Result}, executor::{GitCheckout, GitOptions}, logger::Logger, value::{to_value, Value}, workspace::Workspace
 };
 use git2::{build::CheckoutBuilder, FetchOptions, RemoteCallbacks};
 use serde::{Deserialize, Serialize};
 use url::Url;
 
+use crate::system::random::random_string;
+
 use super::{
-    kinds::infer_local_executor_type, loader::LoadMetadata, resolver::ExecutorResolution,
-    ExecutorResolver, ExecutorUpdate, ResolverContext,
+    kinds::infer_local_executor_type, loader::LoadMetadata, resolver::ExecutorSource,
+    ExecutorResolver
 };
 
 const REPOSITORIES_PATH: &str = ".blaze/repositories";
-
-fn get_repository_path(package_id: u64) -> PathBuf {
-    Path::new(REPOSITORIES_PATH).join(package_id.to_string())
-}
 
 #[derive(Serialize, Deserialize)]
 struct State {
     repository_path: PathBuf,
 }
 
-pub struct GitHeadlessResolver {
+pub struct GitHeadlessResolver<'a> {
     git_options: GitOptions,
+    logger: &'a Logger,
+    repositories_root: PathBuf,
     remote_callbacks_customizer: Box<dyn Fn(&mut RemoteCallbacks<'_>)>,
     fetch_options_customizer: Box<dyn Fn(&mut FetchOptions<'_>)>,
 }
 
-impl GitHeadlessResolver {
+#[derive(Clone, Copy)]
+pub struct GitResolverContext<'a> {
+    pub workspace: &'a Workspace,
+    pub logger: &'a Logger
+}
+
+impl <'a> GitHeadlessResolver<'a> {
     pub fn new(
         git_options: GitOptions,
+        context: GitResolverContext<'a>,
         remote_callbacks_customizer: impl Fn(&mut RemoteCallbacks<'_>) + 'static,
         fetch_options_customizer: impl Fn(&mut FetchOptions<'_>) + 'static,
     ) -> Self {
         Self {
+            logger: context.logger,
+            repositories_root: context.workspace
+                .root()
+                .join(REPOSITORIES_PATH),
             remote_callbacks_customizer: Box::new(remote_callbacks_customizer),
             fetch_options_customizer: Box::new(fetch_options_customizer),
             git_options,
@@ -50,7 +59,7 @@ impl GitHeadlessResolver {
         remote_callbacks
     }
 
-    fn default_fetch_options<'a>(&self, remote_callbacks: RemoteCallbacks<'a>) -> FetchOptions<'a> {
+    fn default_fetch_options<'r>(&self, remote_callbacks: RemoteCallbacks<'r>) -> FetchOptions<'r> {
         let mut fetch_options = git2::FetchOptions::new();
         fetch_options.remote_callbacks(remote_callbacks);
         fetch_options.download_tags(git2::AutotagOption::All);
@@ -58,12 +67,11 @@ impl GitHeadlessResolver {
     }
 }
 
-impl ExecutorResolver for GitHeadlessResolver {
-    fn resolve(&self, url: &Url, context: ResolverContext<'_>) -> Result<ExecutorResolution> {
-        let repository_path = context
-            .workspace
-            .root()
-            .join(get_repository_path(context.package_id));
+impl ExecutorResolver for GitHeadlessResolver<'_> {
+    fn resolve(&self, url: &Url) -> Result<ExecutorSource> {
+        let repository_path = self
+            .repositories_root
+            .join(random_string(12));
 
         if repository_path.try_exists()? {
             std::fs::remove_dir_all(&repository_path)?;
@@ -82,8 +90,7 @@ impl ExecutorResolver for GitHeadlessResolver {
 
         let repository = repo_builder.clone(url.as_ref(), &repository_path)?;
 
-        context
-            .logger
+        self.logger
             .debug(format!("cloned {} to {}", url, repository_path.display()));
 
         if let Some(checkout) = &self.git_options.checkout() {
@@ -116,7 +123,7 @@ impl ExecutorResolver for GitHeadlessResolver {
             repository_path: repository_path.to_owned(),
         };
 
-        Ok(ExecutorResolution {
+        Ok(ExecutorSource {
             load_metadata: LoadMetadata {
                 kind: self
                     .git_options
@@ -136,14 +143,13 @@ impl ExecutorResolver for GitHeadlessResolver {
     fn update(
         &self,
         url: &Url,
-        context: ResolverContext<'_>,
         state: &Value,
-    ) -> Result<ExecutorUpdate> {
+    ) -> Result<Option<ExecutorSource>> {
         let state = State::deserialize(state)?;
         let repository = git2::Repository::open(&state.repository_path)?;
 
         if !self.git_options.pull() {
-            return Ok(ExecutorUpdate::Keep);
+            return Ok(None);
         }
 
         let refspecs = match &self.git_options.checkout() {
@@ -167,8 +173,7 @@ impl ExecutorResolver for GitHeadlessResolver {
 
         remote.fetch(&refspecs, Some(&mut fetch_options), None)?;
 
-        context
-            .logger
+        self.logger
             .debug(format!("fetched refspecs {:?} for {}", refspecs, url));
 
         let fetch_head = repository.find_reference("FETCH_HEAD")?;
@@ -184,10 +189,9 @@ impl ExecutorResolver for GitHeadlessResolver {
             .ok_or_else(|| anyhow!("could not resolve commit id for HEAD"))?;
 
         if fetch_head_commit == head_commit {
-            context
-                .logger
+            self.logger
                 .debug(format!("{url} is up to date ({fetch_head_commit})"));
-            return Ok(ExecutorUpdate::Keep);
+            return Ok(None);
         }
 
         head.set_target(
@@ -200,16 +204,16 @@ impl ExecutorResolver for GitHeadlessResolver {
         )?;
         repository.checkout_head(Some(git2::build::CheckoutBuilder::default().force()))?;
 
-        context.logger.debug(format!(
+        self.logger.debug(format!(
             "executor files were updated for {url} (now at {fetch_head_commit})"
         ));
 
-        Ok(ExecutorUpdate::Update {
-            new_state: None,
-            reload_with_metadata: LoadMetadata {
+        Ok(Some(ExecutorSource {
+            state: to_value(&state)?,
+            load_metadata: LoadMetadata {
                 kind: infer_local_executor_type(&state.repository_path)?,
                 src: state.repository_path,
             },
-        })
+        }))
     }
 }

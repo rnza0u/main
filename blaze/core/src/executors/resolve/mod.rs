@@ -7,8 +7,9 @@ pub mod loader;
 pub mod resolver;
 pub mod ssh_git;
 pub mod standard;
+pub mod npm;
 
-use std::collections::{HashMap, HashSet};
+use std::{collections::{HashMap, HashSet}, hash::{Hash, Hasher}};
 
 use anyhow::Context;
 use blaze_common::{
@@ -20,12 +21,13 @@ use blaze_common::{
 };
 use possibly::possibly;
 use rand::{thread_rng, RngCore};
+use resolver::ExecutorSource;
 use serde::{Deserialize, Serialize};
 use url::Url;
 
 use crate::{
     executors::DynExecutor,
-    system::{locks::ProcessLock, parallel_executor::ParallelRunner},
+    system::{hash::hasher, locks::ProcessLock, parallel_executor::ParallelRunner},
     workspace::cache_store::CacheStore,
 };
 
@@ -34,8 +36,7 @@ use standard::resolve_standard_executor;
 use self::{
     loader::{loader_for_executor_kind, LoadContext},
     resolver::{
-        get_executor_package_id, resolver_for_location, ExecutorResolver, ExecutorUpdate,
-        ResolverContext,
+        resolver_for_location, ExecutorResolver
     },
 };
 
@@ -44,7 +45,7 @@ use self::{
 pub struct CustomResolutionContext<'a> {
     pub workspace: &'a Workspace,
     pub cache: Option<&'a CacheStore>,
-    pub logger: &'a Logger<'a>,
+    pub logger: &'a Logger,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -193,7 +194,7 @@ fn resolve_custom_executor(
     package_id: u64,
     context: CustomResolutionContext<'_>,
 ) -> Result<CustomExecutorResolution> {
-    let resolver: Box<dyn ExecutorResolver> = resolver_for_location(location.clone());
+    let resolver: Box<dyn ExecutorResolver> = resolver_for_location(location.clone(), context);
 
     let state_key = format!("executors/{package_id}");
 
@@ -203,12 +204,6 @@ fn resolve_custom_executor(
         .transpose()
         .with_context(|| format!("failed to restore solution state for executor {url}"))?;
 
-    let resolver_ctx = ResolverContext {
-        workspace: context.workspace,
-        logger: context.logger,
-        package_id,
-    };
-
     let load_context = LoadContext {
         workspace: context.workspace,
     };
@@ -217,7 +212,7 @@ fn resolve_custom_executor(
         Some(cached_metadata) => {
             context.logger.debug(format!("{url} exists in cache"));
             let executor_update = resolver
-                .update(url, resolver_ctx, &cached_metadata.resolution_state)
+                .update(url, &cached_metadata.resolution_state)
                 .with_context(|| {
                     format!(
                     "failed to validate executor resolution for {url}. cache might be corrupted."
@@ -225,10 +220,10 @@ fn resolve_custom_executor(
                 })?;
 
             match executor_update {
-                ExecutorUpdate::Update {
-                    new_state,
-                    reload_with_metadata: load_metadata,
-                } => {
+                Some(ExecutorSource {
+                    state,
+                    load_metadata,
+                }) => {
                     let reloaded_executor = loader_for_executor_kind(load_metadata.kind)
                         .load_from_src(&load_metadata.src, load_context)?;
                     context
@@ -245,12 +240,12 @@ fn resolve_custom_executor(
                         CachedMetadata {
                             kind: load_metadata.kind,
                             executor_metadata: reloaded_executor_metadata,
-                            resolution_state: new_state.unwrap_or(cached_metadata.resolution_state),
+                            resolution_state: state,
                             nonce,
                         },
                     )
                 }
-                ExecutorUpdate::Keep => {
+                None => {
                     let cached_executor = loader_for_executor_kind(cached_metadata.kind)
                         .load_from_metadata(&cached_metadata.executor_metadata)?;
                     context
@@ -269,7 +264,7 @@ fn resolve_custom_executor(
         }
         None => {
             let resolution = resolver
-                .resolve(url, resolver_ctx)
+                .resolve(url)
                 .with_context(|| format!("failed to resolve executor {url}"))?;
 
             context.logger.debug(format!("{url} was resolved"));
@@ -307,4 +302,56 @@ fn resolve_custom_executor(
     }
 
     Ok(executor)
+}
+
+pub fn get_executor_package_id(reference: &ExecutorReference) -> u64 {
+    let mut hasher = hasher();
+    match reference {
+        ExecutorReference::Standard { url } => {
+            url.hash(&mut hasher);
+        }
+        ExecutorReference::Custom { url, location } => {
+            url.hash(&mut hasher);
+            match location {
+                Location::GitOverHttp {
+                    transport,
+                    git_options,
+                    authentication,
+                } => {
+                    transport.headers().hash(&mut hasher);
+                    git_options.checkout().hash(&mut hasher);
+                    authentication.hash(&mut hasher);
+                }
+                Location::GitOverSsh {
+                    git_options,
+                    authentication,
+                    ..
+                } => {
+                    git_options.checkout().hash(&mut hasher);
+                    authentication.hash(&mut hasher);
+                }
+                Location::TarballOverHttp {
+                    transport,
+                    authentication,
+                    ..
+                } => {
+                    transport.headers().hash(&mut hasher);
+                    authentication.hash(&mut hasher);
+                }
+                Location::LocalFileSystem { .. } => {}
+                Location::Npm { options } => {
+                    options.version().hash(&mut hasher);
+                    options.token().hash(&mut hasher);
+                }
+                Location::Cargo { options } => {
+                    options.version().hash(&mut hasher);
+                    options.token().hash(&mut hasher);
+                }
+                Location::Git { options } => {
+                    options.checkout().hash(&mut hasher);
+                }
+            }
+        }
+    }
+    hasher.finish()
 }

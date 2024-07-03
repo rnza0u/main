@@ -66,7 +66,7 @@ pub struct CachedDependencyExecution<'a, T> {
 #[derive(Clone, Copy)]
 pub struct CachedExecutionContext<'a> {
     pub cache: &'a CacheStore,
-    pub logger: &'a Logger<'a>,
+    pub logger: &'a Logger,
     pub workspace: &'a Workspace,
 }
 
@@ -118,37 +118,37 @@ impl TargetExecution {
                     (
                         "executor was updated",
                         Box::new(ExecutorUpdateCheck::new(
-                            context.logger.clone(),
                             state,
                             nonce,
+                            context.logger
                         )) as Box<dyn CacheInvalidationCheck>,
                     )
                 }),
                 invalidation_strategy.expired().map(|options| {
                     (
                         "ttl expired",
-                        Box::new(TtlCheck::new(context.logger.clone(), options))
+                        Box::new(TtlCheck::new(options, context.logger))
                             as Box<dyn CacheInvalidationCheck>,
                     )
                 }),
                 invalidation_strategy.files_missing().map(|options| {
                     (
                         "files were missing",
-                        Box::new(FilesMissingCheck::new(context.logger.clone(), options))
+                        Box::new(FilesMissingCheck::new(options, context.logger))
                             as Box<dyn CacheInvalidationCheck>,
                     )
                 }),
                 invalidation_strategy.input_changes().map(|options| {
                     (
                         "input file(s) changed",
-                        Box::new(InputFileChangesCheck::new(context.logger.clone(), options))
+                        Box::new(InputFileChangesCheck::new(options, context.logger))
                             as Box<dyn CacheInvalidationCheck>,
                     )
                 }),
                 invalidation_strategy.output_changes().map(|options| {
                     (
                         "output file(s) changed",
-                        Box::new(OutputFileChangesCheck::new(context.logger.clone(), options))
+                        Box::new(OutputFileChangesCheck::new(options, context.logger))
                             as Box<dyn CacheInvalidationCheck>,
                     )
                 }),
@@ -162,7 +162,7 @@ impl TargetExecution {
                 invalidation_strategy.env_changes().map(|options| {
                     (
                         "environment variables changed",
-                        Box::new(EnvChangesCheck::new(context.logger.clone(), options))
+                        Box::new(EnvChangesCheck::new(options, context.logger))
                             as Box<dyn CacheInvalidationCheck>,
                     )
                 }),

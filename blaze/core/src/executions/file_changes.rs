@@ -19,12 +19,12 @@ const INPUT_FILE_CHANGES_STATE_KEY: &str = "input-file-changes";
 const OUTPUT_FILE_CHANGES_STATE_KEY: &str = "output-file-changes";
 
 pub struct OutputFileChangesCheck<'a> {
-    logger: Logger<'a>,
+    logger: &'a Logger,
     matchers: &'a BTreeSet<FileChangesMatcher>,
 }
 
 impl<'a> OutputFileChangesCheck<'a> {
-    pub fn new(logger: Logger<'a>, matchers: &'a BTreeSet<FileChangesMatcher>) -> Self {
+    pub fn new(matchers: &'a BTreeSet<FileChangesMatcher>, logger: &'a Logger) -> Self {
         Self { matchers, logger }
     }
 }
@@ -74,13 +74,13 @@ impl CacheInvalidationCheck for OutputFileChangesCheck<'_> {
 }
 
 pub struct InputFileChangesCheck<'a> {
-    logger: Logger<'a>,
+    logger: &'a Logger,
     matchers: &'a BTreeSet<FileChangesMatcher>,
     computed_state: Option<MatchedFilesState>,
 }
 
 impl<'a> InputFileChangesCheck<'a> {
-    pub fn new(logger: Logger<'a>, matchers: &'a BTreeSet<FileChangesMatcher>) -> Self {
+    pub fn new(matchers: &'a BTreeSet<FileChangesMatcher>, logger: &'a Logger) -> Self {
         Self {
             matchers,
             logger,

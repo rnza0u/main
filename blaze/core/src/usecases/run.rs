@@ -200,7 +200,7 @@ pub fn run<R: AsRef<Path>>(
         fn maybe_locked<T, F>(
             root: &Path,
             execution: &TargetExecution,
-            logger: Logger<'static>,
+            logger: Logger,
             f: F,
         ) -> Result<T>
         where

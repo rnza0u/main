@@ -7,19 +7,21 @@ use git2::{CertificateCheckStatus, Cred};
 use url::Url;
 
 use super::{
-    git_common::GitHeadlessResolver, resolver::ExecutorResolution, ExecutorResolver,
-    ExecutorUpdate, ResolverContext,
+    git_common::{GitHeadlessResolver, GitResolverContext},
+    resolver::ExecutorSource,
+    ExecutorResolver
 };
 
-pub struct GitOverHttpResolver {
-    delegate: GitHeadlessResolver,
+pub struct GitOverHttpResolver<'a> {
+    delegate: GitHeadlessResolver<'a>,
 }
 
-impl GitOverHttpResolver {
+impl<'a> GitOverHttpResolver<'a> {
     pub fn new(
         git_options: GitOptions,
         http_transport: HttpTransport,
         authentication: Option<GitPlainAuthentication>,
+        context: GitResolverContext<'a>
     ) -> Self {
         let headers = http_transport.headers().clone();
         let insecure = http_transport.insecure();
@@ -27,6 +29,7 @@ impl GitOverHttpResolver {
         Self {
             delegate: GitHeadlessResolver::new(
                 git_options,
+                context,
                 move |remote_callbacks| {
                     remote_callbacks.certificate_check(move |_certificate, _| {
                         Ok(if insecure {
@@ -67,17 +70,12 @@ impl GitOverHttpResolver {
     }
 }
 
-impl ExecutorResolver for GitOverHttpResolver {
-    fn resolve(&self, url: &Url, context: ResolverContext<'_>) -> Result<ExecutorResolution> {
-        self.delegate.resolve(url, context)
+impl ExecutorResolver for GitOverHttpResolver<'_> {
+    fn resolve(&self, url: &Url) -> Result<ExecutorSource> {
+        self.delegate.resolve(url)
     }
 
-    fn update(
-        &self,
-        url: &Url,
-        context: ResolverContext<'_>,
-        state: &Value,
-    ) -> Result<ExecutorUpdate> {
-        self.delegate.update(url, context, state)
+    fn update(&self, url: &Url, state: &Value) -> Result<Option<ExecutorSource>> {
+        self.delegate.update(url, state)
     }
 }

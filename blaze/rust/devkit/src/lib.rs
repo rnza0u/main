@@ -8,7 +8,7 @@ pub struct ExecutorContext<'a> {
     pub workspace: &'a Workspace,
     pub project: &'a Project,
     pub target: &'a str,
-    pub logger: &'a Logger<'a>,
+    pub logger: &'a Logger,
 }
 
 pub type ExecutorResult = Result<(), Box<dyn Error + Send + Sync>>;

@@ -30,13 +30,13 @@ pub trait LoggingStrategy: Send {
 
 /// A logger object that delegates to a [`LoggingStrategy`]. Handles boxing and wrapping in [`Arc`].
 #[derive(Clone)]
-pub struct Logger<'a>(
-    Arc<Box<dyn LoggingStrategy + Send + Sync + UnwindSafe + RefUnwindSafe + 'a>>,
+pub struct Logger ( 
+    Arc<Box<dyn LoggingStrategy + Send + Sync + UnwindSafe + RefUnwindSafe + 'static>>,
 );
 
-impl<'a> Logger<'a> {
+impl Logger {
     /// Create a new logger object from the provided [`LoggingStrategy`] implementation.
-    pub fn new<T: LoggingStrategy + Send + Sync + UnwindSafe + RefUnwindSafe + 'a>(
+    pub fn new<T: LoggingStrategy + Send + Sync + UnwindSafe + RefUnwindSafe + 'static>(
         strategy: T,
     ) -> Self {
         Self(Arc::new(Box::new(strategy)))

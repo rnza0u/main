@@ -17,7 +17,7 @@ use super::{
 
 pub struct EnvChangesCheck<'a> {
     options: &'a EnvChangesOptions,
-    logger: Logger<'a>,
+    logger: &'a Logger,
     computed_state: Option<WatchedVariablesState>,
 }
 
@@ -27,7 +27,7 @@ struct WatchedVariablesState(HashMap<String, String>);
 const WATCHED_VARIABLES_STATE_KEY: &str = "env";
 
 impl<'a> EnvChangesCheck<'a> {
-    pub fn new(logger: Logger<'a>, options: &'a EnvChangesOptions) -> Self {
+    pub fn new(options: &'a EnvChangesOptions, logger: &'a Logger) -> Self {
         Self {
             logger,
             options,

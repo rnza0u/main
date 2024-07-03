@@ -9,12 +9,12 @@ use super::{
 };
 
 pub struct FilesMissingCheck<'a> {
-    logger: Logger<'a>,
+    logger: &'a Logger,
     files: &'a BTreeSet<PathBuf>,
 }
 
-impl<'a> FilesMissingCheck<'a> {
-    pub fn new(logger: Logger<'a>, files: &'a BTreeSet<PathBuf>) -> Self {
+impl <'a> FilesMissingCheck<'a> {
+    pub fn new(files: &'a BTreeSet<PathBuf>, logger: &'a Logger) -> Self {
         Self { files, logger }
     }
 }

@@ -11,7 +11,7 @@ pub struct ExecutorContext<'a> {
     pub project: &'a Project,
     pub target: &'a str,
     #[serde(skip)]
-    pub logger: &'a Logger<'a>,
+    pub logger: &'a Logger,
 }
 
 pub type DynExecutor = Box<dyn Executor + Send + Sync + UnwindSafe + RefUnwindSafe>;

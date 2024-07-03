@@ -71,7 +71,7 @@ impl GlobalOptions {
 
 pub struct WorkspaceGlobals<'a> {
     workspace_handle: WorkspaceHandle,
-    logger: Logger<'a>,
+    logger: Logger,
     log_level: LogLevel,
     cache: Option<CacheStore>,
     template_data: TemplateData<'a>,
@@ -83,7 +83,7 @@ impl<'a> WorkspaceGlobals<'a> {
         &self.workspace_handle
     }
 
-    pub fn logger(&self) -> Logger<'a> {
+    pub fn logger(&self) -> Logger {
         self.logger.clone()
     }
 

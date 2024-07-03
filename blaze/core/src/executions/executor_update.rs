@@ -11,7 +11,7 @@ use super::{
 pub struct ExecutorUpdateCheck<'a> {
     state: ExecutorCacheState,
     nonce: u64,
-    logger: Logger<'a>,
+    logger: &'a Logger,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -21,8 +21,8 @@ struct State {
 
 const EXECUTOR_STATE_KEY: &str = "executor_state";
 
-impl<'a> ExecutorUpdateCheck<'a> {
-    pub fn new(logger: Logger<'a>, state: ExecutorCacheState, nonce: u64) -> Self {
+impl <'a> ExecutorUpdateCheck<'a> {
+    pub fn new(state: ExecutorCacheState, nonce: u64, logger: &'a Logger) -> Self {
         Self {
             logger,
             state,
@@ -31,7 +31,7 @@ impl<'a> ExecutorUpdateCheck<'a> {
     }
 }
 
-impl<'a> CacheInvalidationCheck for ExecutorUpdateCheck<'a> {
+impl CacheInvalidationCheck for ExecutorUpdateCheck<'_> {
     fn state(&self, _: &TargetExecution) -> Result<Option<Value>> {
         Ok(Some(Value::object([(
             EXECUTOR_STATE_KEY,

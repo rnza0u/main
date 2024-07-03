@@ -25,11 +25,11 @@ struct TtlState {
 
 pub struct TtlCheck<'a> {
     options: &'a TtlOptions,
-    logger: Logger<'a>,
+    logger: &'a Logger,
 }
 
 impl<'a> TtlCheck<'a> {
-    pub fn new(logger: Logger<'a>, options: &'a TtlOptions) -> Self {
+    pub fn new(options: &'a TtlOptions, logger: &'a Logger) -> Self {
         Self { options, logger }
     }
 }

@@ -4,11 +4,11 @@ use colored::*;
 use rand::{thread_rng, RngCore};
 use std::io::Write;
 
-pub fn get_logger(level: LogLevel) -> Logger<'static> {
+pub fn get_logger(level: LogLevel) -> Logger {
     Logger::new(MainLoggingStrategy::new(level))
 }
 
-pub fn get_contextual_logger(level: LogLevel, context: &str) -> Logger<'static> {
+pub fn get_contextual_logger(level: LogLevel, context: &str) -> Logger {
     let mut strategy = MainLoggingStrategy::new(level);
     strategy.set_context(context);
     Logger::new(strategy)

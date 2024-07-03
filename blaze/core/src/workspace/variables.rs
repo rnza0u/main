@@ -24,7 +24,7 @@ pub const VARIABLES_FILE_PATH: &str = ".blaze/variables";
 
 pub struct LoadVariablesOptions<'a> {
     pub template_data: &'a TemplateData<'a>,
-    pub logger: &'a Logger<'a>,
+    pub logger: &'a Logger,
     pub overrides: Vec<VariablesOverride>,
     pub jpath: &'a HashSet<PathBuf>,
 }
