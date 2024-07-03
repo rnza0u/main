@@ -80,6 +80,11 @@ const config = {
             respectPrefersColorScheme: false
         },
         image: 'assets/logos/Blaze-logos-rounded.png',
+        algolia: {
+            appId: 'M58RO1JY7H',
+            apiKey: '80144c83096b621942a21d2830b1760b',
+            indexName: 'blaze-monorepo'
+        },
         navbar: {
             title: 'Blaze',
             items: [

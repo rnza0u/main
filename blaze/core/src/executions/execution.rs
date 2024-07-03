@@ -117,11 +117,8 @@ impl TargetExecution {
                 executor_cache.map(|(state, nonce)| {
                     (
                         "executor was updated",
-                        Box::new(ExecutorUpdateCheck::new(
-                            state,
-                            nonce,
-                            context.logger
-                        )) as Box<dyn CacheInvalidationCheck>,
+                        Box::new(ExecutorUpdateCheck::new(state, nonce, context.logger))
+                            as Box<dyn CacheInvalidationCheck>,
                     )
                 }),
                 invalidation_strategy.expired().map(|options| {

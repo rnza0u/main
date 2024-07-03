@@ -88,7 +88,7 @@ impl Value {
         match self {
             Self::Signed(i) => Some(*i),
             Self::Unsigned(u) => i64::try_from(*u).ok(),
-            _ => None
+            _ => None,
         }
     }
 

@@ -133,7 +133,7 @@ export const executorSchema = {
                 },
                 watch: {
                     type: 'array',
-                    description: 'What files should be watched for changes when rebuild strategy is set to \"OnChanges\"',
+                    description: 'What files should be watched for changes when rebuild strategy is set to "OnChanges"',
                     items: fileChangesMatcherSchema
                 }
             },

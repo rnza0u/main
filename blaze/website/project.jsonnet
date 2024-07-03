@@ -129,7 +129,7 @@ local env = {
             unlinkPackage: '@blaze-repo/website', 
             extraDirectories: ['docs/cli', 'build', '.docusaurus']
         }),
-        'build-image': docker.build('blaze-website') + {
+        'build-image': docker.build('blaze-website', 'registry.rnzaou.me', ['conf/**']) + {
             dependencies: ['build']
         },
         'push-image': docker.push('blaze-website') + {

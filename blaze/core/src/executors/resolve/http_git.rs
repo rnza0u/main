@@ -9,7 +9,7 @@ use url::Url;
 use super::{
     git_common::{GitHeadlessResolver, GitResolverContext},
     resolver::ExecutorSource,
-    ExecutorResolver
+    ExecutorResolver,
 };
 
 pub struct GitOverHttpResolver<'a> {
@@ -21,7 +21,7 @@ impl<'a> GitOverHttpResolver<'a> {
         git_options: GitOptions,
         http_transport: HttpTransport,
         authentication: Option<GitPlainAuthentication>,
-        context: GitResolverContext<'a>
+        context: GitResolverContext<'a>,
     ) -> Self {
         let headers = http_transport.headers().clone();
         let insecure = http_transport.insecure();

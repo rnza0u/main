@@ -4,12 +4,15 @@ pub mod git_common;
 pub mod http_git;
 pub mod kinds;
 pub mod loader;
+pub mod npm;
 pub mod resolver;
 pub mod ssh_git;
 pub mod standard;
-pub mod npm;
 
-use std::{collections::{HashMap, HashSet}, hash::{Hash, Hasher}};
+use std::{
+    collections::{HashMap, HashSet},
+    hash::{Hash, Hasher},
+};
 
 use anyhow::Context;
 use blaze_common::{
@@ -35,9 +38,7 @@ use standard::resolve_standard_executor;
 
 use self::{
     loader::{loader_for_executor_kind, LoadContext},
-    resolver::{
-        resolver_for_location, ExecutorResolver
-    },
+    resolver::{resolver_for_location, ExecutorResolver},
 };
 
 /// Extra data needed in order to resolve an executor.

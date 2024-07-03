@@ -9,7 +9,7 @@ use blaze_common::{
     cache::{FileChangesMatcher, MatchingBehavior},
     error::Result,
     executor::{FileSystemOptions, RebuildStrategy},
-    value::{to_value, Value}
+    value::{to_value, Value},
 };
 
 use serde::{Deserialize, Serialize};
@@ -19,7 +19,7 @@ use crate::system::file_changes::{MatchedFiles, MatchedFilesState};
 
 use super::{
     kinds::infer_local_executor_type, loader::LoadMetadata, resolver::ExecutorSource,
-    ExecutorResolver
+    ExecutorResolver,
 };
 
 #[derive(Serialize, Deserialize)]
@@ -43,7 +43,10 @@ pub struct FileSystemResolver {
 
 impl FileSystemResolver {
     pub fn new(workspace_root: &Path, options: FileSystemOptions) -> Self {
-        Self { options, workspace_root: workspace_root.to_owned() }
+        Self {
+            options,
+            workspace_root: workspace_root.to_owned(),
+        }
     }
 
     fn get_matched_files(&self, root: &Path) -> Result<MatchedFiles> {
@@ -81,11 +84,7 @@ impl ExecutorResolver for FileSystemResolver {
         })
     }
 
-    fn update(
-        &self,
-        url: &Url,
-        state: &Value,
-    ) -> Result<Option<ExecutorSource>> {
+    fn update(&self, url: &Url, state: &Value) -> Result<Option<ExecutorSource>> {
         let root = get_canonical_root_path(url, &self.workspace_root)
             .with_context(|| format!("could not get canonical executor path from {url}"))?;
         let state = State::deserialize(state)?;

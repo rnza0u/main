@@ -3,7 +3,7 @@ use url::Url;
 
 use super::{
     git_common::{GitHeadlessResolver, GitResolverContext},
-    resolver::{ExecutorSource, ExecutorResolver},
+    resolver::{ExecutorResolver, ExecutorSource},
 };
 
 pub struct GitResolver<'a> {

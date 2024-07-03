@@ -198,7 +198,7 @@ fn main() -> Result<()> {
         }
         PipelineTrigger::Manual => PipelineParameters::from_env()?,
     };
-    
+
     println!("parameters: {params:?}");
 
     let cache = CacheOptions::from_env()?;

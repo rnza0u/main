@@ -13,7 +13,7 @@ pub struct FilesMissingCheck<'a> {
     files: &'a BTreeSet<PathBuf>,
 }
 
-impl <'a> FilesMissingCheck<'a> {
+impl<'a> FilesMissingCheck<'a> {
     pub fn new(files: &'a BTreeSet<PathBuf>, logger: &'a Logger) -> Self {
         Self { files, logger }
     }

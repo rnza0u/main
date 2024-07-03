@@ -21,7 +21,7 @@ struct State {
 
 const EXECUTOR_STATE_KEY: &str = "executor_state";
 
-impl <'a> ExecutorUpdateCheck<'a> {
+impl<'a> ExecutorUpdateCheck<'a> {
     pub fn new(state: ExecutorCacheState, nonce: u64, logger: &'a Logger) -> Self {
         Self {
             logger,

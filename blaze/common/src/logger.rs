@@ -30,7 +30,7 @@ pub trait LoggingStrategy: Send {
 
 /// A logger object that delegates to a [`LoggingStrategy`]. Handles boxing and wrapping in [`Arc`].
 #[derive(Clone)]
-pub struct Logger ( 
+pub struct Logger(
     Arc<Box<dyn LoggingStrategy + Send + Sync + UnwindSafe + RefUnwindSafe + 'static>>,
 );
 

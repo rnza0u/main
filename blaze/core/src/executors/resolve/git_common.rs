@@ -2,7 +2,11 @@ use std::path::PathBuf;
 
 use anyhow::anyhow;
 use blaze_common::{
-    error::{Error, Result}, executor::{GitCheckout, GitOptions}, logger::Logger, value::{to_value, Value}, workspace::Workspace
+    error::{Error, Result},
+    executor::{GitCheckout, GitOptions},
+    logger::Logger,
+    value::{to_value, Value},
+    workspace::Workspace,
 };
 use git2::{build::CheckoutBuilder, FetchOptions, RemoteCallbacks};
 use serde::{Deserialize, Serialize};
@@ -12,7 +16,7 @@ use crate::system::random::random_string;
 
 use super::{
     kinds::infer_local_executor_type, loader::LoadMetadata, resolver::ExecutorSource,
-    ExecutorResolver
+    ExecutorResolver,
 };
 
 const REPOSITORIES_PATH: &str = ".blaze/repositories";
@@ -33,10 +37,10 @@ pub struct GitHeadlessResolver<'a> {
 #[derive(Clone, Copy)]
 pub struct GitResolverContext<'a> {
     pub workspace: &'a Workspace,
-    pub logger: &'a Logger
+    pub logger: &'a Logger,
 }
 
-impl <'a> GitHeadlessResolver<'a> {
+impl<'a> GitHeadlessResolver<'a> {
     pub fn new(
         git_options: GitOptions,
         context: GitResolverContext<'a>,
@@ -45,9 +49,7 @@ impl <'a> GitHeadlessResolver<'a> {
     ) -> Self {
         Self {
             logger: context.logger,
-            repositories_root: context.workspace
-                .root()
-                .join(REPOSITORIES_PATH),
+            repositories_root: context.workspace.root().join(REPOSITORIES_PATH),
             remote_callbacks_customizer: Box::new(remote_callbacks_customizer),
             fetch_options_customizer: Box::new(fetch_options_customizer),
             git_options,
@@ -69,9 +71,7 @@ impl <'a> GitHeadlessResolver<'a> {
 
 impl ExecutorResolver for GitHeadlessResolver<'_> {
     fn resolve(&self, url: &Url) -> Result<ExecutorSource> {
-        let repository_path = self
-            .repositories_root
-            .join(random_string(12));
+        let repository_path = self.repositories_root.join(random_string(12));
 
         if repository_path.try_exists()? {
             std::fs::remove_dir_all(&repository_path)?;
@@ -140,11 +140,7 @@ impl ExecutorResolver for GitHeadlessResolver<'_> {
         })
     }
 
-    fn update(
-        &self,
-        url: &Url,
-        state: &Value,
-    ) -> Result<Option<ExecutorSource>> {
+    fn update(&self, url: &Url, state: &Value) -> Result<Option<ExecutorSource>> {
         let state = State::deserialize(state)?;
         let repository = git2::Repository::open(&state.repository_path)?;
 
