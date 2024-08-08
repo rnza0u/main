@@ -23,7 +23,7 @@ const config = {
 
     // GitHub pages deployment config.
     // If you aren't using GitHub pages, you don't need these.
-    organizationName: 'Hakhenaton', // Usually your GitHub org/user name.
+    organizationName: 'rnza0u', // Usually your GitHub org/user name.
     projectName: 'blaze', // Usually your repo name.
 
     onBrokenLinks: 'throw',
@@ -100,7 +100,7 @@ const config = {
                     to: 'downloads'
                 },
                 {
-                    href: 'https://github.com/Hakhenaton/main/tree/master/blaze',
+                    href: 'https://github.com/rnza0u/main/tree/master/blaze',
                     label: 'GitHub',
                     position: 'right',
                 },

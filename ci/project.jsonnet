@@ -38,7 +38,7 @@ local cargoTargets = cargo.all();
                         arguments: [
                             'sign',
                             '--save',
-                            'Hakhenaton/main'
+                            'rnza0u/main'
                         ],
                         cwd: '{{ root }}'
                     }

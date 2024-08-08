@@ -2,7 +2,7 @@
     targets: {
         'rust-executor': {
             executor: {
-                url: 'ssh://git@github.com/Hakhenaton/blaze-test-rust-executor.git',
+                url: 'ssh://git@github.com/rnza0u/blaze-test-rust-executor.git',
                 branch: 'master',
                 fingerprints: [
                     'SHA256:uNiVztksCsDhcc0u9e8BujQXVUpKZIDTMczCvj3tD2s',

@@ -5,7 +5,7 @@
   "type": "module",
   "private": true,
   "repository": {
-    "url": "git+https://github.com/Hakhenaton/main.git",
+    "url": "git+https://github.com/rnza0u/main.git",
     "directory": "libs/js/eslint-config"
   },
   "scripts": {

@@ -1,6 +1,6 @@
 # RSA-OAEP-PSS
 
-[![Build Status](https://drone.rnzaou.me/api/badges/Hakhenaton/rsa-oaep-pss/status.svg)](https://drone.rnzaou.me/Hakhenaton/rsa-oaep-pss)
+[![Build Status](https://drone.rnzaou.me/api/badges/rnza0u/rsa-oaep-pss/status.svg)](https://drone.rnzaou.me/rnza0u/rsa-oaep-pss)
 [![docs.rs](https://img.shields.io/docsrs/rsa-oaep-pss)](https://docs.rs/rsa-oaep-pss)
 [![crates.io](https://img.shields.io/crates/v/rsa-oaep-pss)](https://crates.io/crates/rsa_oaep_pss)
 

@@ -84,7 +84,7 @@ local architectures = [
                         program: 'git',
                         arguments: [
                             'clone',
-                            'https://github.com/Hakhenaton/cross'
+                            'https://github.com/rnza0u/cross'
                         ]
                     },
                     {

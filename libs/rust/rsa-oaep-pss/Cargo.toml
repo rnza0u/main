@@ -5,7 +5,7 @@ edition = "2021"
 authors = ["N'zaou Renaud"]
 rust-version = "1.63"
 description = "A pure Rust implementation of the RSA public key cryptosystem"
-repository = "https://github.com/Hakhenaton/main/libs/rust/rsa-oaep-pss"
+repository = "https://github.com/rnza0u/main/libs/rust/rsa-oaep-pss"
 license = "GPL-3.0-or-later"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

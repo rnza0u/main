@@ -53,7 +53,7 @@ const executor: Executor = async (context, options) => {
             'remote',
             'set-url',
             'origin',
-            'git@github.com:Hakhenaton/main.git'
+            'git@github.com:rnza0u/main.git'
         ]
     )
 
@@ -64,7 +64,7 @@ const executor: Executor = async (context, options) => {
             'set-url',
             '--push',
             'origin',
-            'git@github.com:Hakhenaton/main.git'
+            'git@github.com:rnza0u/main.git'
         ]
     )
 

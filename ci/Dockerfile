@@ -33,7 +33,7 @@ RUN apk update && \
     --target x86_64-apple-darwin \
     --target aarch64-apple-darwin && \
     source "$HOME/.cargo/env" && \
-    cargo +${RUST_VERSION} install cross --git https://github.com/Hakhenaton/cross && \
+    cargo +${RUST_VERSION} install cross --git https://github.com/rnza0u& \
     curl --output /tmp/docker.tgz https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz && \
     tar -C /tmp -xzf /tmp/docker.tgz docker/docker && \
     rm /tmp/docker.tgz && \

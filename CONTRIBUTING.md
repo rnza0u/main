@@ -9,7 +9,7 @@ Contributions are always welcome. Please read these guidelines beforehand.
 
 ## Before submitting a pull request
 
-- For new features and breaking changes, please [file an issue first](https://github.com/Hakhenaton/main/issues/new) so we can discuss about it.
+- For new features and breaking changes, please [file an issue first](https://github.com/rnza0u/main/issues/new) so we can discuss about it.
 - Your pull request must target the `develop` branch.
 - Make sure that your code is properly formatted. Run the `lint` target if available.
 - Make sure that your code is covered by tests. Write new tests if necessary and run the `test` target if available.

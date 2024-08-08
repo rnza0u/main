@@ -11,7 +11,7 @@
         "blaze/cli-docs/Cargo.toml",
         "blaze/downloads/Cargo.toml",
         "libs/rust/hash-value/Cargo.toml",
-        "libs/rust/possibly/Cargo.toml",
+        "libs/rust/possibly/Cargo.toml"
     ],
     "rust-analyzer.cargo.extraEnv": {},
     "rust-analyzer.cargo.extraArgs": ["-Z", "bindeps"],

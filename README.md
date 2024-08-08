@@ -12,4 +12,4 @@ Welcome to my monorepo.
 
 ## CI status
 
-[![Build Status](https://drone.rnzaou.me/api/badges/Hakhenaton/main/status.svg)](https://drone.rnzaou.me/Hakhenaton/main)
+[![Build Status](https://drone.rnzaou.me/api/badges/rnza0u/main/status.svg)](https://drone.rnzaou.me/rnza0u/main)

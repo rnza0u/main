@@ -2,7 +2,7 @@
   "name": "@blaze-repo/node-bridge",
   "homepage": "https://blaze-monorepo.dev",
   "repository": {
-    "url": "git+https://github.com/Hakhenaton/main.git",
+    "url": "git+https://github.com/rnza0u/main.git",
     "directory": "blaze/node/bridge"
   },
   "version": "0.2.11",

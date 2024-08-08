@@ -38,7 +38,7 @@ const crateMetadataSchema = z.object({
 })
 
 const cratesIoHeaders = {
-    'User-Agent': 'https://github.com/Hakhenaton/main.git'
+    'User-Agent': 'https://github.com/rnza0un.git'
 }
 
 const executor: Executor = async (context, userOptions) => {
