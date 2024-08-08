@@ -5,7 +5,7 @@ services:
     env_file:
       - .drone-env
     environment:
-      - DRONE_GITHUB_CLIENT_ID=10cd2786a42e321ef4f2
+      - DRONE_GITHUB_CLIENT_ID=46989113bdad4f0ddbe7
       - DRONE_SERVER_HOST=drone.rnzaou.me
       - DRONE_SERVER_PROTO=https
       - DRONE_REGISTRATION_CLOSED=true
