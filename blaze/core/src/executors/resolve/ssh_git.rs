@@ -8,7 +8,7 @@ use url::Url;
 
 use super::{
     git_common::{GitHeadlessResolver, GitResolverContext},
-    resolver::ExecutorSource,
+    resolver::{ExecutorResolution, ExecutorUpdate},
     ExecutorResolver,
 };
 
@@ -124,11 +124,11 @@ impl<'a> GitOverSshResolver<'a> {
 }
 
 impl ExecutorResolver for GitOverSshResolver<'_> {
-    fn resolve(&self, url: &Url) -> Result<ExecutorSource> {
+    fn resolve(&self, url: &Url) -> Result<ExecutorResolution> {
         self.delegate.resolve(url)
     }
 
-    fn update(&self, url: &Url, state: &Value) -> Result<Option<ExecutorSource>> {
+    fn update(&self, url: &Url, state: &Value) -> Result<ExecutorUpdate> {
         self.delegate.update(url, state)
     }
 }

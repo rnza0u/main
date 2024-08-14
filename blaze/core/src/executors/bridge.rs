@@ -31,7 +31,7 @@ pub type ExecutorParams<'a> = (ExecutorContext<'a>, &'a Value);
 
 pub struct BridgeProcessParams<'p> {
     pub program: &'p str,
-    pub arguments: &'p [String],
+    pub arguments: &'p [&'p str],
     pub input: Option<&'p [u8]>,
 }
 
@@ -82,7 +82,7 @@ pub fn bridge_executor<T: Serialize>(
             .context("could not serialize bridge parameters")?;
 
         let mut arguments = process_params.arguments.to_vec();
-        arguments.push(serialized_input_message);
+        arguments.push(&serialized_input_message);
 
         let mut process = Process::run_with_options(
             process_params.program,

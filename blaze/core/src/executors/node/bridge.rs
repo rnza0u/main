@@ -39,7 +39,6 @@ pub fn execute_node_bridge(parameters: NodeBridgeParameters) -> Result<()> {
                 "--",
             ]
             .into_iter()
-            .map(str::to_owned)
             .collect::<Vec<_>>()
             .as_slice(),
             input: Some(include_bytes!(env!("BLAZE_NODE_BRIDGE_BUNDLE_PATH"))),

@@ -30,7 +30,7 @@ impl <'a> NpmResolver<'a> {
 }
 
 impl ExecutorResolver for NpmResolver<'_> {
-    fn resolve(&self, _url: &Url) -> Result<ExecutorSource> {
+    fn resolve(&self, url: &Url) -> Result<ExecutorSource> {
         todo!()
     }
 

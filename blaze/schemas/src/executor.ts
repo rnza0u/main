@@ -39,6 +39,7 @@ const sshTransportProperties: Record<string, Schema> = {
         type: 'array', 
         items: {
             type: 'string',
+            description: 'Format must be: (MD5|SHA1|SHA256):<base64 hash>',
             pattern: '^(MD5|SHA1|SHA256):.+$'
         }
     }
@@ -115,7 +116,7 @@ export const executorSchema = {
             required: ['url']
         }),
         strictObject({
-            description: 'Local filesystem executor configuration',
+            description: 'Local filesystem executor configuration.',
             properties: {
                 url: {
                     type: 'string',
@@ -140,6 +141,7 @@ export const executorSchema = {
             required: ['url']
         }),
         strictObject({
+            description: 'Git over HTTP executor configuration.',
             properties: {
                 url: {
                     description: 'Git repository HTTP URL',
@@ -160,10 +162,11 @@ export const executorSchema = {
             required: ['url', 'format'],
         }),
         strictObject({
+            description: 'Git over SSH executor configuration.',
             properties: {
                 url: {
                     type: 'string',
-                    description: 'Git repository SSH URL',
+                    description: 'Git repository SSH URL.',
                     pattern: '^ssh://.+$'
                 },
                 authentication: {
@@ -172,6 +175,44 @@ export const executorSchema = {
                 },
                 ...gitOptionsProperties,
                 ...sshTransportProperties
+            }
+        }),
+        strictObject({
+            description: 'NPM executor configuration',
+            properties: {
+                url: {
+                    type: 'string',
+                    description: 'NPM executor URL',
+                    pattern: '^npm://.+$'
+                },
+                insecure: {
+                    type: 'boolean',
+                    description: 'Ignore certificate rejections when connecting to the registry. Only for debugging purpose.',
+                    default: false
+                },
+                token: {
+                    type: 'string',
+                    description: 'Use a specific access token when connecting to the registry.'
+                }
+            }
+        }),
+        strictObject({
+            description: 'Cargo executor configuration',
+            properties: {
+                url: {
+                    type: 'string',
+                    description: 'Cargo executor URL',
+                    pattern: '^cargo://.+$'
+                },
+                insecure: {
+                    type: 'boolean',
+                    description: 'Ignore certificate rejections when connecting to the registry. Only for debugging purpose.',
+                    default: false
+                },
+                token: {
+                    type: 'string',
+                    description: 'Use a specific access token when connecting to the registry.'
+                }
             }
         })
     ]
